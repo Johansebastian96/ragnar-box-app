@@ -1,0 +1,26 @@
+{
+  "name": "Ragnar Box",
+  "short_name": "Ragnar",
+  "description": "App de entrenamiento para atletas de Ragnar Box",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080808",
+  "theme_color": "#CC1F1F",
+  "lang": "es",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%23080808'/%3E%3Ccircle cx='96' cy='96' r='80' fill='none' stroke='%23CC1F1F' stroke-opacity='0.15' stroke-width='2'/%3E%3Ccircle cx='96' cy='96' r='64' fill='none' stroke='%23CC1F1F' stroke-opacity='0.25' stroke-width='2'/%3E%3Ctext x='96' y='128' font-family='Arial, sans-serif' font-weight='900' font-size='110' fill='%23CC1F1F' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='86' fill='%23080808'/%3E%3Ccircle cx='256' cy='256' r='214' fill='none' stroke='%23CC1F1F' stroke-opacity='0.15' stroke-width='4'/%3E%3Ccircle cx='256' cy='256' r='170' fill='none' stroke='%23CC1F1F' stroke-opacity='0.25' stroke-width='4'/%3E%3Ctext x='256' y='340' font-family='Arial, sans-serif' font-weight='900' font-size='290' fill='%23CC1F1F' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

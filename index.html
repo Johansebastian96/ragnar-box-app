@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Ragnar Box</title>
+<meta name="description" content="App de entrenamiento para atletas de Ragnar Box">
+<meta name="theme-color" content="#CC1F1F">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080808'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='58' fill='%23CC1F1F' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080808'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='58' fill='%23CC1F1F' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root{
+    --bg:#080808;
+    --surface-1:#101010;
+    --surface-2:#181818;
+    --accent:#CC1F1F;
+    --accent-2:#E02020;
+    --text:#F2EFE9;
+    --text-dim:#9a9690;
+    --border:rgba(255,255,255,0.06);
+    --border-accent:rgba(204,31,31,0.28);
+    --radius-card:12px;
+    --radius-el:10px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    height:100%;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-tap-highlight-color:transparent;
+    overscroll-behavior:none;
+  }
+  body{ display:flex; flex-direction:column; min-height:100vh; }
+  button{ font-family:inherit; cursor:pointer; }
+  input{ font-family:inherit; }
+  .hidden{ display:none !important; }
+
+  /* ---------- Splash / Login ---------- */
+  #splash-screen{
+    position:fixed; inset:0; z-index:50;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:
+      radial-gradient(circle at 50% 20%, rgba(204,31,31,0.10), transparent 60%),
+      var(--bg);
+    padding:32px 24px;
+    overflow-y:auto;
+  }
+  .splash-logo-wrap{ position:relative; width:180px; height:180px; margin-bottom:8px; }
+  .splash-rings{ position:absolute; inset:0; }
+  .splash-brand{ text-align:center; margin-bottom:6px; }
+  .splash-brand .agnar{ font-size:30px; font-weight:800; letter-spacing:4px; color:var(--text); }
+  .splash-brand .agnar .r-letter{ color:var(--accent); }
+  .splash-brand .box{ font-size:14px; font-weight:700; letter-spacing:8px; color:var(--text-dim); margin-top:2px; }
+  .splash-date{ font-size:13px; color:var(--text-dim); margin-top:14px; text-transform:capitalize; }
+  .splash-tagline{ font-size:14px; color:var(--accent-2); font-weight:600; letter-spacing:1px; margin-top:6px; margin-bottom:28px; }
+
+  .login-form{ width:100%; max-width:340px; display:flex; flex-direction:column; gap:14px; }
+  .input-group{
+    display:flex; align-items:center; gap:10px;
+    background:var(--surface-1);
+    border:1px solid var(--border);
+    border-radius:var(--radius-el);
+    padding:13px 14px;
+  }
+  .input-group:focus-within{ border-color:var(--border-accent); }
+  .input-group i{ color:var(--accent-2); font-size:18px; flex-shrink:0; }
+  .input-group input{
+    background:transparent; border:none; outline:none; color:var(--text);
+    font-size:15px; width:100%;
+  }
+  .input-group input::placeholder{ color:var(--text-dim); }
+
+  .btn-primary{
+    background:linear-gradient(180deg, var(--accent-2), var(--accent));
+    color:#fff; border:none; border-radius:var(--radius-el);
+    padding:14px; font-size:15px; font-weight:700; letter-spacing:0.3px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 4px 18px rgba(204,31,31,0.25);
+  }
+  .btn-primary:active{ transform:scale(0.98); }
+  .login-error{
+    color:var(--accent-2); font-size:13px; text-align:center;
+    background:rgba(204,31,31,0.08); border:1px solid var(--border-accent);
+    border-radius:var(--radius-el); padding:10px; display:none;
+  }
+  .login-error.show{ display:block; }
+  .login-hint{ text-align:center; font-size:11px; color:var(--text-dim); margin-top:18px; line-height:1.6; }
+
+  /* ---------- App shell ---------- */
+  #app{ display:none; flex-direction:column; min-height:100vh; padding-bottom:78px; }
+  #app.active{ display:flex; }
+
+  .app-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 18px 14px;
+    border-bottom:1px solid var(--border);
+    background:var(--bg);
+    position:sticky; top:0; z-index:10;
+  }
+  .app-header .brand{ display:flex; align-items:center; gap:10px; }
+  .app-header .brand-mark{
+    width:36px; height:36px; border-radius:9px;
+    background:var(--surface-1); border:1px solid var(--border-accent);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--accent); font-weight:900; font-size:18px;
+  }
+  .app-header .brand-text{ font-size:14px; font-weight:800; letter-spacing:2px; }
+  .app-header .brand-text span{ color:var(--accent); }
+  .app-header .meta{ text-align:right; }
+  .app-header .meta .date{ font-size:11px; color:var(--text-dim); text-transform:capitalize; }
+  .app-header .meta .coach{ font-size:12px; color:var(--text); font-weight:600; margin-top:2px; }
+
+  main.view{ display:none; flex:1; padding:16px 16px 24px; }
+  main.view.active{ display:block; }
+
+  .section-title{
+    font-size:12px; font-weight:800; letter-spacing:1.5px; color:var(--text-dim);
+    text-transform:uppercase; margin:22px 0 10px;
+  }
+  .section-title:first-child{ margin-top:0; }
+
+  .stats-row{ display:flex; gap:12px; }
+  .stat-card{
+    flex:1; background:var(--surface-1); border:1px solid var(--border);
+    border-radius:var(--radius-card); padding:16px; text-align:center;
+  }
+  .stat-card .stat-value{ font-size:26px; font-weight:800; color:var(--accent-2); }
+  .stat-card .stat-label{ font-size:11px; color:var(--text-dim); margin-top:4px; letter-spacing:0.5px; }
+
+  .wod-card{
+    background:var(--surface-1); border:1px solid var(--border);
+    border-radius:var(--radius-card); padding:16px; margin-bottom:14px;
+  }
+  .wod-card.warmup{ background:var(--surface-2); }
+  .wod-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+  .wod-title{ font-size:14px; font-weight:800; letter-spacing:0.5px; }
+  .wod-badge{
+    font-size:10px; font-weight:800; color:var(--accent-2);
+    background:rgba(204,31,31,0.12); border:1px solid var(--border-accent);
+    border-radius:20px; padding:3px 10px; letter-spacing:0.5px; white-space:nowrap;
+  }
+  .wod-scheme{ font-size:11px; color:var(--text-dim); margin-bottom:12px; letter-spacing:0.3px; }
+  .wod-list{ list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .wod-list li{
+    display:flex; align-items:center; gap:10px; font-size:14px; color:var(--text);
+    padding:8px 10px; background:rgba(255,255,255,0.02); border-radius:8px;
+  }
+  .wod-list li i{ color:var(--accent-2); font-size:16px; flex-shrink:0; }
+  .wod-note{ font-size:12px; color:var(--text-dim); font-style:italic; margin-top:10px; }
+
+  .btn-outline{
+    margin-top:14px; width:100%; background:transparent;
+    border:1px solid var(--border-accent); color:var(--accent-2);
+    border-radius:var(--radius-el); padding:11px; font-size:13px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn-outline:active{ background:rgba(204,31,31,0.08); }
+
+  .result-form{ margin-top:12px; display:none; gap:10px; flex-direction:column; }
+  .result-form.show{ display:flex; }
+  .result-form-row{ display:flex; gap:10px; }
+  .result-form input{
+    flex:1; background:var(--surface-2); border:1px solid var(--border);
+    border-radius:8px; padding:10px 12px; color:var(--text); font-size:14px; outline:none;
+  }
+  .result-form input:focus{ border-color:var(--border-accent); }
+  .result-form .save-btn{
+    background:var(--accent); color:#fff; border:none; border-radius:8px;
+    padding:10px 16px; font-size:13px; font-weight:700;
+  }
+  .saved-result{
+    margin-top:10px; font-size:12px; color:var(--accent-2);
+    background:rgba(204,31,31,0.08); border:1px solid var(--border-accent);
+    border-radius:8px; padding:8px 10px; display:flex; align-items:center; gap:6px;
+  }
+  .saved-result.hidden{ display:none; }
+
+  /* ---------- RMs ---------- */
+  .rm-category{ margin-bottom:6px; }
+  .rm-card{
+    background:var(--surface-1); border:1px solid var(--border);
+    border-radius:var(--radius-card); margin-bottom:10px; overflow:hidden;
+  }
+  .rm-card-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 16px; gap:10px;
+  }
+  .rm-card-head .rm-name{ font-size:14px; font-weight:700; }
+  .rm-card-head .rm-value{ font-size:15px; font-weight:800; color:var(--accent-2); display:flex; align-items:center; gap:8px; }
+  .rm-card-head i.chev{ color:var(--text-dim); transition:transform 0.2s; font-size:14px; }
+  .rm-card.expanded .chev{ transform:rotate(180deg); }
+  .rm-percents{
+    max-height:0; overflow:hidden; transition:max-height 0.25s ease;
+    border-top:1px solid var(--border);
+  }
+  .rm-card.expanded .rm-percents{ max-height:200px; }
+  .rm-percents-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:0; padding:12px 10px; }
+  .rm-percent-item{ text-align:center; padding:4px 2px; }
+  .rm-percent-item .pct{ font-size:10px; color:var(--text-dim); }
+  .rm-percent-item .val{ font-size:13px; font-weight:700; color:var(--text); margin-top:3px; }
+
+  /* ---------- Timer ---------- */
+  .timer-modes{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
+  .mode-btn{
+    background:var(--surface-1); border:1px solid var(--border); color:var(--text-dim);
+    border-radius:20px; padding:8px 14px; font-size:12px; font-weight:700;
+  }
+  .mode-btn.active{ background:rgba(204,31,31,0.14); border-color:var(--border-accent); color:var(--accent-2); }
+
+  .timer-config{
+    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
+    padding:14px; margin-bottom:16px; font-size:12px; color:var(--text-dim);
+  }
+  .timer-config-row{ display:flex; align-items:center; justify-content:space-between; padding:6px 0; }
+  .timer-config-row input{
+    width:70px; text-align:center; background:var(--surface-2); border:1px solid var(--border);
+    border-radius:8px; padding:6px; color:var(--text); font-size:14px; outline:none;
+  }
+
+  .timer-display-wrap{
+    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
+    padding:36px 16px; text-align:center; margin-bottom:18px; transition:background 0.2s, border-color 0.2s;
+  }
+  .timer-display-wrap.danger{ background:rgba(204,31,31,0.10); border-color:var(--border-accent); }
+  .timer-round-label{ font-size:12px; letter-spacing:1px; color:var(--text-dim); text-transform:uppercase; margin-bottom:10px; min-height:16px; }
+  .timer-round-label.danger{ color:var(--accent-2); font-weight:800; }
+  .timer-display{
+    font-size:68px; font-weight:800; font-variant-numeric:tabular-nums; font-feature-settings:"tnum";
+    color:var(--text); line-height:1; letter-spacing:1px;
+  }
+  .timer-display.danger{ color:var(--accent-2); }
+  .timer-sub{ font-size:13px; color:var(--text-dim); margin-top:12px; min-height:18px; }
+  .timer-sub.finished{ color:var(--accent-2); font-weight:800; letter-spacing:1px; }
+
+  .timer-controls{ display:flex; gap:10px; }
+  .timer-btn{
+    flex:1; border-radius:var(--radius-el); padding:14px; font-size:14px; font-weight:800;
+    border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .timer-btn.start{ background:linear-gradient(180deg, var(--accent-2), var(--accent)); color:#fff; border:none; }
+  .timer-btn.pause{ background:var(--surface-2); color:var(--text); }
+  .timer-btn.reset{ background:transparent; color:var(--text-dim); }
+
+  /* ---------- Atletas ---------- */
+  .attendance-bar-wrap{
+    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
+    padding:14px 16px; margin-bottom:16px;
+  }
+  .attendance-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .attendance-top .label{ font-size:12px; color:var(--text-dim); letter-spacing:0.5px; }
+  .attendance-top .count{ font-size:14px; font-weight:800; color:var(--accent-2); }
+  .progress-track{ height:8px; background:var(--surface-2); border-radius:20px; overflow:hidden; }
+  .progress-fill{ height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius:20px; }
+
+  .athletes-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .athlete-card{
+    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
+    padding:14px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px;
+    position:relative;
+  }
+  .athlete-card.coach{ border-color:var(--border-accent); background:var(--surface-2); grid-column:1 / -1; flex-direction:row; text-align:left; justify-content:flex-start; }
+  .avatar{
+    width:52px; height:52px; border-radius:50%; background:radial-gradient(circle at 30% 30%, var(--accent-2), var(--accent));
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:17px;
+    flex-shrink:0; position:relative;
+  }
+  .presence-dot{
+    position:absolute; bottom:2px; right:2px; width:12px; height:12px; border-radius:50%;
+    border:2px solid var(--surface-1); background:#555;
+  }
+  .presence-dot.active{ background:#3ecf5e; }
+  .athlete-card.coach .presence-dot{ border-color:var(--surface-2); }
+  .athlete-name{ font-size:13px; font-weight:700; }
+  .athlete-role{ font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; }
+  .athlete-card.coach .athlete-name{ color:var(--accent-2); }
+
+  /* ---------- Stats / Benchmarks ---------- */
+  .percentile-card{
+    background:var(--surface-1); border:1px solid var(--border-accent); border-radius:var(--radius-card);
+    padding:18px; margin-bottom:18px; text-align:center;
+  }
+  .percentile-card .percentile-value{ font-size:28px; font-weight:800; color:var(--accent-2); margin-bottom:10px; }
+  .percentile-card .progress-track{ margin-bottom:6px; }
+  .percentile-card .percentile-note{ font-size:11px; color:var(--text-dim); }
+
+  .benchmark-card{
+    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
+    padding:14px 16px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .benchmark-name{ font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; }
+  .pr-badge{
+    font-size:9px; font-weight:800; color:#080808; background:var(--accent-2);
+    border-radius:6px; padding:2px 6px; letter-spacing:0.5px;
+  }
+  .benchmark-value{ font-size:15px; font-weight:800; color:var(--text); }
+
+  /* ---------- Bottom nav ---------- */
+  .bottom-nav{
+    position:fixed; bottom:0; left:0; right:0; z-index:20;
+    display:flex; background:var(--surface-1); border-top:1px solid var(--border);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+  .nav-item{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+    background:transparent; border:none; color:var(--text-dim); padding:8px 2px; border-radius:10px;
+  }
+  .nav-item i{ font-size:21px; }
+  .nav-item span{ font-size:10px; font-weight:600; }
+  .nav-item.active{ color:var(--accent-2); }
+
+  ::-webkit-scrollbar{ width:0; height:0; }
+</style>
+</head>
+<body>
+
+<!-- ================= SPLASH / LOGIN ================= -->
+<div id="splash-screen">
+  <div class="splash-logo-wrap">
+    <svg class="splash-rings" viewBox="0 0 180 180" width="180" height="180">
+      <circle cx="90" cy="90" r="88" fill="none" stroke="#CC1F1F" stroke-opacity="0.06" stroke-width="1.5"/>
+      <circle cx="90" cy="90" r="72" fill="none" stroke="#CC1F1F" stroke-opacity="0.10" stroke-width="1.5"/>
+      <circle cx="90" cy="90" r="56" fill="#101010" stroke="#CC1F1F" stroke-opacity="0.28" stroke-width="1.5"/>
+      <text x="90" y="118" font-family="Arial, sans-serif" font-weight="900" font-size="80" fill="#CC1F1F" text-anchor="middle">R</text>
+    </svg>
+  </div>
+  <div class="splash-brand">
+    <div class="agnar"><span class="r-letter">R</span>AGNAR</div>
+    <div class="box">BOX</div>
+  </div>
+  <div class="splash-date" id="splash-date">--</div>
+  <div class="splash-tagline">Compite. Levanta. Domina.</div>
+
+  <form class="login-form" id="login-form" autocomplete="off">
+    <div class="input-group">
+      <i class="ti ti-mail"></i>
+      <input type="email" id="login-email" placeholder="Correo electrónico" autocomplete="username" required>
+    </div>
+    <div class="input-group">
+      <i class="ti ti-lock"></i>
+      <input type="password" id="login-password" placeholder="Contraseña" autocomplete="current-password" required>
+    </div>
+    <div class="login-error" id="login-error">Credenciales incorrectas. Verifica tu correo y contraseña.</div>
+    <button type="submit" class="btn-primary"><i class="ti ti-door-enter"></i> Entrar al Box</button>
+  </form>
+  <div class="login-hint">Acceso exclusivo para atletas registrados de Ragnar Box</div>
+</div>
+
+<!-- ================= APP ================= -->
+<div id="app">
+
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark">R</div>
+      <div class="brand-text">RAGNAR <span>BOX</span></div>
+    </div>
+    <div class="meta">
+      <div class="date" id="header-date">--</div>
+      <div class="coach">Coach: Claudia</div>
+    </div>
+  </header>
+
+  <!-- ---- HOME ---- -->
+  <main class="view active" id="view-home">
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-streak">12</div>
+        <div class="stat-label">RACHA DÍAS</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-prs">3</div>
+        <div class="stat-label">PRs ESTE MES</div>
+      </div>
+    </div>
+
+    <div class="section-title">Calentamiento</div>
+    <div class="wod-card warmup">
+      <div class="wod-header">
+        <div class="wod-title">Movilidad general</div>
+        <div class="wod-badge">4 RONDAS</div>
+      </div>
+      <ul class="wod-list">
+        <li><i class="ti ti-yoga"></i> 20 Hip 90/90</li>
+        <li><i class="ti ti-yoga"></i> 20 Ángeles prono</li>
+        <li><i class="ti ti-yoga"></i> 20 Escorpiones</li>
+        <li><i class="ti ti-yoga"></i> 20 Manguito rotador</li>
+      </ul>
+    </div>
+
+    <div class="section-title">WOD 1</div>
+    <div class="wod-card" data-wod-id="wod1">
+      <div class="wod-header">
+        <div class="wod-title">Cada 5 minutos</div>
+        <div class="wod-badge">5 RONDAS</div>
+      </div>
+      <div class="wod-scheme">EMOM 5' x 5 rondas</div>
+      <ul class="wod-list">
+        <li><i class="ti ti-run"></i> 200m Run</li>
+        <li><i class="ti ti-arrows-vertical"></i> 20 Pull-Ups</li>
+        <li><i class="ti ti-arrows-up"></i> 20 Toes-to-Bar</li>
+        <li><i class="ti ti-arrow-bar-down"></i> 15 Push-Ups</li>
+      </ul>
+      <div class="wod-note">1 minuto de descanso entre cada ronda</div>
+      <button class="btn-outline" data-toggle-form="wod1"><i class="ti ti-clipboard-check"></i> Registrar resultado</button>
+      <div class="result-form" id="form-wod1">
+        <div class="result-form-row">
+          <input type="number" min="0" max="5" placeholder="Rondas completadas" id="wod1-rounds">
+          <input type="number" min="0" placeholder="Reps extra" id="wod1-reps">
+        </div>
+        <button class="save-btn" data-save="wod1">Guardar resultado</button>
+      </div>
+      <div class="saved-result hidden" id="saved-wod1"></div>
+    </div>
+
+    <div class="section-title">WOD 2</div>
+    <div class="wod-card" data-wod-id="wod2">
+      <div class="wod-header">
+        <div class="wod-title">Cada 2 minutos</div>
+        <div class="wod-badge">5 RONDAS</div>
+      </div>
+      <div class="wod-scheme">EMOM 2' x 5 rondas</div>
+      <ul class="wod-list">
+        <li><i class="ti ti-run"></i> 400m Run</li>
+        <li><i class="ti ti-bolt"></i> MC Burpees</li>
+      </ul>
+      <button class="btn-outline" data-toggle-form="wod2"><i class="ti ti-clipboard-check"></i> Registrar resultado</button>
+      <div class="result-form" id="form-wod2">
+        <div class="result-form-row">
+          <input type="number" min="0" max="5" placeholder="Rondas completadas" id="wod2-rounds">
+          <input type="number" min="0" placeholder="Reps extra" id="wod2-reps">
+        </div>
+        <button class="save-btn" data-save="wod2">Guardar resultado</button>
+      </div>
+      <div class="saved-result hidden" id="saved-wod2"></div>
+    </div>
+  </main>
+
+  <!-- ---- RMs ---- -->
+  <main class="view" id="view-rms">
+    <div class="section-title">Olímpicos</div>
+    <div id="rm-cat-olimpicos"></div>
+
+    <div class="section-title">Fuerza</div>
+    <div id="rm-cat-fuerza"></div>
+
+    <div class="section-title">Gimnasia</div>
+    <div id="rm-cat-gimnasia"></div>
+
+    <button class="btn-outline" id="add-rm-btn"><i class="ti ti-plus"></i> Agregar RM</button>
+  </main>
+
+  <!-- ---- TIMER ---- -->
+  <main class="view" id="view-timer">
+    <div class="section-title">Modo</div>
+    <div class="timer-modes" id="timer-modes">
+      <button class="mode-btn active" data-mode="cada5">Cada 5 min</button>
+      <button class="mode-btn" data-mode="cada2">Cada 2 min</button>
+      <button class="mode-btn" data-mode="amrap">AMRAP</button>
+      <button class="mode-btn" data-mode="fortime">For Time</button>
+      <button class="mode-btn" data-mode="emom">EMOM</button>
+      <button class="mode-btn" data-mode="tabata">Tabata</button>
+    </div>
+
+    <div class="timer-config" id="timer-config"></div>
+
+    <div class="timer-display-wrap" id="timer-display-wrap">
+      <div class="timer-round-label" id="timer-round-label">&nbsp;</div>
+      <div class="timer-display" id="timer-display">05:00</div>
+      <div class="timer-sub" id="timer-sub">Cada 5 minutos · 5 rondas · WOD del día</div>
+    </div>
+
+    <div class="timer-controls">
+      <button class="timer-btn start" id="timer-start"><i class="ti ti-player-play"></i> Iniciar</button>
+      <button class="timer-btn pause" id="timer-pause"><i class="ti ti-player-pause"></i> Pausar</button>
+      <button class="timer-btn reset" id="timer-reset"><i class="ti ti-refresh"></i> Reset</button>
+    </div>
+  </main>
+
+  <!-- ---- ATLETAS ---- -->
+  <main class="view" id="view-atletas">
+    <div class="attendance-bar-wrap">
+      <div class="attendance-top">
+        <span class="label">ASISTENCIA DE HOY</span>
+        <span class="count" id="attendance-count">7/11</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="attendance-fill" style="width:64%"></div></div>
+    </div>
+    <div class="athletes-grid" id="athletes-grid"></div>
+  </main>
+
+  <!-- ---- STATS ---- -->
+  <main class="view" id="view-stats">
+    <div class="percentile-card">
+      <div class="percentile-value">Top 22%</div>
+      <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
+      <div class="percentile-note">Ranking global entre atletas Ragnar Box</div>
+    </div>
+
+    <div class="section-title">Benchmarks</div>
+    <div id="benchmarks-list"></div>
+
+    <button class="btn-outline" id="add-benchmark-btn"><i class="ti ti-plus"></i> Actualizar benchmark</button>
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-view="home"><i class="ti ti-home"></i><span>Inicio</span></button>
+    <button class="nav-item" data-view="rms"><i class="ti ti-trophy"></i><span>RMs</span></button>
+    <button class="nav-item" data-view="timer"><i class="ti ti-stopwatch"></i><span>Timer</span></button>
+    <button class="nav-item" data-view="atletas"><i class="ti ti-users"></i><span>Atletas</span></button>
+    <button class="nav-item" data-view="stats"><i class="ti ti-chart-bar"></i><span>Stats</span></button>
+  </nav>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var AUTH_EMAIL = 'atletas@ragnar.com';
+  var AUTH_PASS  = 'Exito2026*';
+
+  var DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+  function formatLongDate(d){
+    return DIAS[d.getDay()] + ', ' + d.getDate() + ' de ' + MESES[d.getMonth()] + ' de ' + d.getFullYear();
+  }
+  function formatShortDate(d){
+    return d.getDate() + ' ' + MESES[d.getMonth()].slice(0,3) + '. ' + d.getFullYear();
+  }
+
+  var now = new Date();
+  document.getElementById('splash-date').textContent = formatLongDate(now);
+  document.getElementById('header-date').textContent = formatShortDate(now);
+
+  /* ---------------- LOGIN ---------------- */
+  var loginForm = document.getElementById('login-form');
+  var loginError = document.getElementById('login-error');
+  var splash = document.getElementById('splash-screen');
+  var app = document.getElementById('app');
+
+  function enterApp(){
+    splash.classList.add('hidden');
+    app.classList.add('active');
+  }
+
+  if(localStorage.getItem('ragnar_session') === 'active'){
+    enterApp();
+  }
+
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var email = document.getElementById('login-email').value.trim().toLowerCase();
+    var pass = document.getElementById('login-password').value;
+    if(email === AUTH_EMAIL && pass === AUTH_PASS){
+      loginError.classList.remove('show');
+      localStorage.setItem('ragnar_session', 'active');
+      enterApp();
+    } else {
+      loginError.classList.add('show');
+    }
+  });
+
+  /* ---------------- NAV ---------------- */
+  var navItems = document.querySelectorAll('.nav-item');
+  var views = document.querySelectorAll('main.view');
+  navItems.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      navItems.forEach(function(b){ b.classList.remove('active'); });
+      views.forEach(function(v){ v.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('view-' + btn.dataset.view).classList.add('active');
+    });
+  });
+
+  /* ---------------- HOME: WOD RESULTS ---------------- */
+  var WOD_RESULTS_KEY = 'ragnar_wod_results';
+  function getWodResults(){
+    try{ return JSON.parse(localStorage.getItem(WOD_RESULTS_KEY)) || {}; }catch(e){ return {}; }
+  }
+  function saveWodResults(data){
+    localStorage.setItem(WOD_RESULTS_KEY, JSON.stringify(data));
+  }
+  function renderSavedResult(wodId){
+    var results = getWodResults();
+    var el = document.getElementById('saved-' + wodId);
+    if(results[wodId]){
+      var r = results[wodId];
+      el.textContent = '✓ Registrado: ' + r.rounds + ' rondas · ' + r.reps + ' reps extra (' + r.date + ')';
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  }
+  ['wod1','wod2'].forEach(renderSavedResult);
+
+  document.querySelectorAll('[data-toggle-form]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.dataset.toggleForm;
+      document.getElementById('form-' + id).classList.toggle('show');
+    });
+  });
+
+  document.querySelectorAll('[data-save]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.dataset.save;
+      var rounds = document.getElementById(id + '-rounds').value || '0';
+      var reps = document.getElementById(id + '-reps').value || '0';
+      var results = getWodResults();
+      results[id] = { rounds: rounds, reps: reps, date: formatShortDate(new Date()) };
+      saveWodResults(results);
+      renderSavedResult(id);
+      document.getElementById('form-' + id).classList.remove('show');
+    });
+  });
+
+  /* ---------------- MIS RMs ---------------- */
+  var RMS_KEY = 'ragnar_rms';
+  var DEFAULT_RMS = [
+    { name:'Snatch', value:85, unit:'kg', category:'olimpicos' },
+    { name:'Clean & Jerk', value:107, unit:'kg', category:'olimpicos' },
+    { name:'Power Clean', value:97, unit:'kg', category:'olimpicos' },
+    { name:'Back Squat', value:140, unit:'kg', category:'fuerza' },
+    { name:'Front Squat', value:120, unit:'kg', category:'fuerza' },
+    { name:'Deadlift', value:175, unit:'kg', category:'fuerza' },
+    { name:'Bench Press', value:102, unit:'kg', category:'fuerza' },
+    { name:'Shoulder Press', value:72, unit:'kg', category:'fuerza' },
+    { name:'Pull-Ups', value:32, unit:'reps', category:'gimnasia' },
+    { name:'Muscle-Up', value:11, unit:'reps', category:'gimnasia' },
+    { name:'HSPU', value:20, unit:'reps', category:'gimnasia' }
+  ];
+  var PERCENTS = [60,70,80,85,90];
+
+  function getRms(){
+    var stored = localStorage.getItem(RMS_KEY);
+    if(!stored){
+      localStorage.setItem(RMS_KEY, JSON.stringify(DEFAULT_RMS));
+      return DEFAULT_RMS.slice();
+    }
+    try{ return JSON.parse(stored); }catch(e){ return DEFAULT_RMS.slice(); }
+  }
+  function saveRms(list){ localStorage.setItem(RMS_KEY, JSON.stringify(list)); }
+
+  var CATEGORY_LABELS = { olimpicos:'olimpicos', fuerza:'fuerza', gimnasia:'gimnasia' };
+
+  function renderRms(){
+    var rms = getRms();
+    ['olimpicos','fuerza','gimnasia'].forEach(function(cat){
+      var container = document.getElementById('rm-cat-' + cat);
+      container.innerHTML = '';
+      rms.filter(function(r){ return r.category === cat; }).forEach(function(rm, idx){
+        var card = document.createElement('div');
+        card.className = 'rm-card';
+        var percentsHtml = PERCENTS.map(function(p){
+          var val = (rm.value * p / 100);
+          val = rm.unit === 'reps' ? Math.round(val) : Math.round(val * 10) / 10;
+          return '<div class="rm-percent-item"><div class="pct">' + p + '%</div><div class="val">' + val + (rm.unit === 'kg' ? 'kg' : '') + '</div></div>';
+        }).join('');
+        card.innerHTML =
+          '<div class="rm-card-head">' +
+            '<div class="rm-name">' + rm.name + '</div>' +
+            '<div class="rm-value">' + rm.value + (rm.unit === 'kg' ? 'kg' : ' reps') + ' <i class="ti ti-chevron-down chev"></i></div>' +
+          '</div>' +
+          '<div class="rm-percents"><div class="rm-percents-grid">' + percentsHtml + '</div></div>';
+        card.querySelector('.rm-card-head').addEventListener('click', function(){
+          card.classList.toggle('expanded');
+        });
+        container.appendChild(card);
+      });
+    });
+  }
+  renderRms();
+
+  document.getElementById('add-rm-btn').addEventListener('click', function(){
+    var name = prompt('Nombre del RM (ej: Clean, Snatch, Toes-to-Bar):');
+    if(!name) return;
+    var catInput = prompt('Categoría: escribe "olimpicos", "fuerza" o "gimnasia"');
+    var cat = (catInput || '').trim().toLowerCase();
+    if(['olimpicos','fuerza','gimnasia'].indexOf(cat) === -1){ cat = 'fuerza'; }
+    var unitInput = prompt('Unidad: escribe "kg" para peso o "reps" para repeticiones', 'kg');
+    var unit = (unitInput || 'kg').trim().toLowerCase() === 'reps' ? 'reps' : 'kg';
+    var valueInput = prompt('Valor del RM (' + (unit === 'kg' ? 'kilogramos' : 'repeticiones') + '):');
+    var value = parseFloat(valueInput);
+    if(isNaN(value) || value <= 0) return;
+    var rms = getRms();
+    rms.push({ name: name.trim(), value: value, unit: unit, category: cat });
+    saveRms(rms);
+    renderRms();
+  });
+
+  /* ---------------- TIMER ---------------- */
+  var timerDisplay = document.getElementById('timer-display');
+  var timerDisplayWrap = document.getElementById('timer-display-wrap');
+  var timerRoundLabel = document.getElementById('timer-round-label');
+  var timerSub = document.getElementById('timer-sub');
+  var timerConfig = document.getElementById('timer-config');
+
+  var MODES = {
+    cada5: { label:'Cada 5 minutos', interval:300, rounds:5, sub:'Cada 5 minutos · 5 rondas · WOD del día', type:'interval' },
+    cada2: { label:'Cada 2 minutos', interval:120, rounds:5, sub:'Cada 2 minutos · 5 rondas · WOD del día', type:'interval' },
+    amrap: { label:'AMRAP', duration:1200, sub:'Tantas rondas como sea posible', type:'countdown' },
+    fortime: { label:'For Time', cap:1200, sub:'Cronómetro ascendente · registra tu tiempo', type:'countup' },
+    emom: { label:'EMOM', interval:60, rounds:10, sub:'Cada minuto en punto', type:'interval' },
+    tabata: { label:'Tabata', work:20, rest:10, rounds:8, sub:'20s trabajo / 10s descanso · 8 rondas', type:'tabata' }
+  };
+
+  var currentMode = 'cada5';
+  var timerState = {
+    running:false, timeLeft:0, round:1, phase:'work', // phase for tabata
+    handle:null
+  };
+
+  var audioCtx = null;
+  function beep(freq, duration){
+    try{
+      if(!audioCtx){ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq || 880;
+      gain.gain.setValueAtTime(0.28, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + (duration || 0.3));
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + (duration || 0.3));
+    }catch(e){}
+  }
+
+  function fmtTime(sec){
+    sec = Math.max(0, Math.round(sec));
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function renderConfig(){
+    var mode = MODES[currentMode];
+    var html = '';
+    if(mode.type === 'interval'){
+      html = '<div class="timer-config-row"><span>Intervalo</span><span>' + fmtTime(mode.interval) + '</span></div>' +
+             '<div class="timer-config-row"><span>Rondas</span><span>' + mode.rounds + '</span></div>';
+    } else if(mode.type === 'countdown'){
+      html = '<div class="timer-config-row"><span>Duración (min)</span><input type="number" min="1" id="amrap-min" value="' + Math.round(mode.duration/60) + '"></div>';
+    } else if(mode.type === 'countup'){
+      html = '<div class="timer-config-row"><span>Tope máximo (min)</span><input type="number" min="1" id="fortime-cap" value="' + Math.round(mode.cap/60) + '"></div>';
+    } else if(mode.type === 'tabata'){
+      html = '<div class="timer-config-row"><span>Trabajo / Descanso</span><span>' + mode.work + 's / ' + mode.rest + 's</span></div>' +
+             '<div class="timer-config-row"><span>Rondas</span><span>' + mode.rounds + '</span></div>';
+    }
+    timerConfig.innerHTML = html;
+
+    var amrapInput = document.getElementById('amrap-min');
+    if(amrapInput){
+      amrapInput.addEventListener('change', function(){
+        var v = parseInt(amrapInput.value, 10);
+        if(v > 0){ MODES.amrap.duration = v * 60; resetTimer(); }
+      });
+    }
+    var forTimeInput = document.getElementById('fortime-cap');
+    if(forTimeInput){
+      forTimeInput.addEventListener('change', function(){
+        var v = parseInt(forTimeInput.value, 10);
+        if(v > 0){ MODES.fortime.cap = v * 60; resetTimer(); }
+      });
+    }
+  }
+
+  function initTimerForMode(){
+    var mode = MODES[currentMode];
+    timerSub.textContent = mode.sub;
+    timerSub.classList.remove('finished');
+    timerState.round = 1;
+    timerState.phase = 'work';
+    if(mode.type === 'interval'){
+      timerState.timeLeft = mode.interval;
+      timerRoundLabel.textContent = 'Ronda 1 / ' + mode.rounds;
+    } else if(mode.type === 'countdown'){
+      timerState.timeLeft = mode.duration;
+      timerRoundLabel.textContent = 'AMRAP';
+    } else if(mode.type === 'countup'){
+      timerState.timeLeft = 0;
+      timerRoundLabel.textContent = 'FOR TIME';
+    } else if(mode.type === 'tabata'){
+      timerState.timeLeft = mode.work;
+      timerRoundLabel.textContent = 'TRABAJO · Ronda 1 / ' + mode.rounds;
+    }
+    updateDisplay();
+  }
+
+  function updateDisplay(){
+    var mode = MODES[currentMode];
+    var displaySec = mode.type === 'countup' ? timerState.timeLeft : timerState.timeLeft;
+    timerDisplay.textContent = fmtTime(displaySec);
+
+    var isLastTen = mode.type !== 'countup' && timerState.timeLeft <= 10 && timerState.timeLeft > 0 && timerState.running;
+    if(isLastTen){
+      timerDisplayWrap.classList.add('danger');
+      timerDisplay.classList.add('danger');
+      timerRoundLabel.classList.add('danger');
+      timerRoundLabel.textContent = 'ÚLTIMOS SEGUNDOS';
+    } else {
+      timerDisplayWrap.classList.remove('danger');
+      timerDisplay.classList.remove('danger');
+      timerRoundLabel.classList.remove('danger');
+    }
+  }
+
+  function tick(){
+    var mode = MODES[currentMode];
+
+    if(mode.type === 'countup'){
+      timerState.timeLeft += 1;
+      if(timerState.timeLeft >= mode.cap){
+        finishTimer();
+        return;
+      }
+      updateDisplay();
+      return;
+    }
+
+    timerState.timeLeft -= 1;
+
+    if(timerState.timeLeft <= 0){
+      if(mode.type === 'interval'){
+        if(timerState.round >= mode.rounds){
+          finishTimer();
+          return;
+        }
+        beep(1046, 0.35);
+        timerState.round += 1;
+        timerState.timeLeft = mode.interval;
+        timerRoundLabel.textContent = 'Ronda ' + timerState.round + ' / ' + mode.rounds;
+        timerRoundLabel.classList.remove('danger');
+      } else if(mode.type === 'countdown'){
+        finishTimer();
+        return;
+      } else if(mode.type === 'tabata'){
+        if(timerState.phase === 'work'){
+          beep(1046, 0.3);
+          timerState.phase = 'rest';
+          timerState.timeLeft = mode.rest;
+          timerRoundLabel.textContent = 'DESCANSO · Ronda ' + timerState.round + ' / ' + mode.rounds;
+        } else {
+          if(timerState.round >= mode.rounds){
+            finishTimer();
+            return;
+          }
+          beep(1318, 0.3);
+          timerState.round += 1;
+          timerState.phase = 'work';
+          timerState.timeLeft = mode.work;
+          timerRoundLabel.textContent = 'TRABAJO · Ronda ' + timerState.round + ' / ' + mode.rounds;
+        }
+        timerRoundLabel.classList.remove('danger');
+      }
+    }
+
+    updateDisplay();
+  }
+
+  function startTimer(){
+    if(timerState.running) return;
+    timerState.running = true;
+    timerState.handle = setInterval(tick, 1000);
+  }
+  function pauseTimer(){
+    timerState.running = false;
+    clearInterval(timerState.handle);
+  }
+  function resetTimer(){
+    pauseTimer();
+    renderConfig();
+    initTimerForMode();
+  }
+  function finishTimer(){
+    pauseTimer();
+    beep(660, 0.6);
+    setTimeout(function(){ beep(880, 0.6); }, 350);
+    timerDisplayWrap.classList.remove('danger');
+    timerDisplay.classList.remove('danger');
+    timerRoundLabel.classList.remove('danger');
+    timerRoundLabel.textContent = MODES[currentMode].type === 'countup' ? 'FOR TIME' : '';
+    timerSub.textContent = '¡TIEMPO!';
+    timerSub.classList.add('finished');
+  }
+
+  document.getElementById('timer-start').addEventListener('click', startTimer);
+  document.getElementById('timer-pause').addEventListener('click', pauseTimer);
+  document.getElementById('timer-reset').addEventListener('click', resetTimer);
+
+  document.querySelectorAll('#timer-modes .mode-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#timer-modes .mode-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentMode = btn.dataset.mode;
+      resetTimer();
+    });
+  });
+
+  renderConfig();
+  initTimerForMode();
+
+  /* ---------------- ATLETAS ---------------- */
+  var ATHLETES = [
+    { name:'Javier', active:true },
+    { name:'Mafe', active:true },
+    { name:'Carlos', active:true },
+    { name:'Sthepa', active:false },
+    { name:'Bryam', active:true },
+    { name:'J. Sebastian', active:true },
+    { name:'Damaris', active:false },
+    { name:'Henry', active:true },
+    { name:'Valentina', active:false },
+    { name:'Sara', active:true },
+    { name:'Alejandro', active:false }
+  ];
+
+  function initials(name){
+    return name.split(' ').map(function(p){ return p.replace('.', '')[0]; }).join('').toUpperCase().slice(0,2);
+  }
+
+  function renderAthletes(){
+    var grid = document.getElementById('athletes-grid');
+    grid.innerHTML = '';
+
+    var coachCard = document.createElement('div');
+    coachCard.className = 'athlete-card coach';
+    coachCard.innerHTML =
+      '<div class="avatar">CL<span class="presence-dot active"></span></div>' +
+      '<div><div class="athlete-name">Claudia</div><div class="athlete-role">Coach</div></div>';
+    grid.appendChild(coachCard);
+
+    ATHLETES.forEach(function(a){
+      var card = document.createElement('div');
+      card.className = 'athlete-card';
+      card.innerHTML =
+        '<div class="avatar">' + initials(a.name) + '<span class="presence-dot ' + (a.active ? 'active' : '') + '"></span></div>' +
+        '<div class="athlete-name">' + a.name + '</div>' +
+        '<div class="athlete-role">Atleta</div>';
+      grid.appendChild(card);
+    });
+
+    var activeCount = ATHLETES.filter(function(a){ return a.active; }).length;
+    document.getElementById('attendance-count').textContent = activeCount + '/' + ATHLETES.length;
+    document.getElementById('attendance-fill').style.width = Math.round(activeCount / ATHLETES.length * 100) + '%';
+  }
+  renderAthletes();
+
+  /* ---------------- STATS / BENCHMARKS ---------------- */
+  var BENCHMARKS_KEY = 'ragnar_benchmarks';
+  var DEFAULT_BENCHMARKS = [
+    { name:'Fran', value:'3:48', pr:true },
+    { name:'Grace', value:'2:11', pr:false },
+    { name:'Cindy', value:'24 rondas', pr:false },
+    { name:'DT', value:'6:02', pr:false },
+    { name:'Isabel', value:'4:44', pr:false }
+  ];
+
+  function getBenchmarks(){
+    var stored = localStorage.getItem(BENCHMARKS_KEY);
+    if(!stored){
+      localStorage.setItem(BENCHMARKS_KEY, JSON.stringify(DEFAULT_BENCHMARKS));
+      return DEFAULT_BENCHMARKS.slice();
+    }
+    try{ return JSON.parse(stored); }catch(e){ return DEFAULT_BENCHMARKS.slice(); }
+  }
+  function saveBenchmarks(list){ localStorage.setItem(BENCHMARKS_KEY, JSON.stringify(list)); }
+
+  function renderBenchmarks(){
+    var list = getBenchmarks();
+    var container = document.getElementById('benchmarks-list');
+    container.innerHTML = '';
+    list.forEach(function(b){
+      var card = document.createElement('div');
+      card.className = 'benchmark-card';
+      card.innerHTML =
+        '<div class="benchmark-name">' + b.name + (b.pr ? ' <span class="pr-badge">PR</span>' : '') + '</div>' +
+        '<div class="benchmark-value">' + b.value + '</div>';
+      container.appendChild(card);
+    });
+  }
+  renderBenchmarks();
+
+  document.getElementById('add-benchmark-btn').addEventListener('click', function(){
+    var name = prompt('Nombre del benchmark (ej: Fran, Grace, Murph):');
+    if(!name) return;
+    var value = prompt('Resultado (ej: 3:45 o 22 rondas):');
+    if(!value) return;
+    var isPr = confirm('¿Es un nuevo PR?');
+    var list = getBenchmarks();
+    var existing = list.find(function(b){ return b.name.toLowerCase() === name.trim().toLowerCase(); });
+    if(existing){
+      existing.value = value.trim();
+      existing.pr = isPr;
+    } else {
+      list.push({ name: name.trim(), value: value.trim(), pr: isPr });
+    }
+    saveBenchmarks(list);
+    renderBenchmarks();
+  });
+
+  /* ---------------- SERVICE WORKER ---------------- */
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('./sw.js').catch(function(){});
+    });
+  }
+
+})();
+</script>
+</body>
+</html>
