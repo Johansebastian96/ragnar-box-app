@@ -25,6 +25,12 @@
     --border:rgba(255,255,255,0.05);
     --border-red:rgba(204,31,31,0.3);
     --green:#4CD97A;
+    --gold:#D4A843;
+    --gold2:#F0C855;
+    --silver:#8FA8BE;
+    --silver2:#B8CDD8;
+    --bronze:#9B6840;
+    --bronze2:#C4895A;
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html,body{
@@ -336,25 +342,139 @@
   .coach-info .athlete-name{ font-size:16px; font-weight:900; }
   .coach-role{ font-size:10px; font-weight:900; color:var(--red2); text-transform:uppercase; letter-spacing:1.5px; margin-top:3px; }
 
-  /* ================= STATS / BENCHMARKS ================= */
-  .benchmark-row{
-    display:flex; align-items:center; gap:14px;
-    padding:16px 20px; border-bottom:0.5px solid var(--border);
-  }
-  .benchmark-row .bm-num{ font-size:11px; font-weight:900; color:var(--w4); min-width:20px; }
-  .benchmark-row .bm-info{ flex:1; }
-  .benchmark-row .bm-name-row{ display:flex; align-items:center; gap:8px; }
-  .bm-name{ font-size:20px; font-weight:900; text-transform:uppercase; letter-spacing:-0.5px; }
-  .bm-pr{ font-size:9px; font-weight:900; color:var(--red2); text-transform:uppercase; letter-spacing:1px; }
-  .bm-desc{ font-size:11px; color:var(--w3); margin-top:3px; }
-  .bm-value{ font-size:22px; font-weight:900; text-align:right; flex-shrink:0; }
+  /* ================= PODIO ================= */
+  .section-title-podio{ font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--w4); margin:20px 0 10px; }
 
-  .percentile-section{ padding:26px 20px; text-align:center; border-top:0.5px solid var(--border); margin-top:6px; }
-  .percentile-label{ font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--w4); margin-bottom:10px; }
-  .percentile-number{ font-size:64px; font-weight:900; letter-spacing:-3px; line-height:1; }
-  .percentile-number .top-word{ color:var(--red); }
-  .percentile-number .pct-word{ color:var(--white); }
-  .percentile-sub{ font-size:12px; color:var(--w3); margin:12px 0 16px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+  .wod-live-card{ background:var(--bg1); border-radius:6px; padding:16px; margin-bottom:20px; }
+  .wod-live-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .wod-live-status{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--green); animation:blink 1.4s infinite; }
+  .wod-live-status span:last-child{ font-size:10px; font-weight:900; color:var(--green); text-transform:uppercase; letter-spacing:1px; }
+  .wod-live-title{ font-size:18px; font-weight:900; text-transform:uppercase; letter-spacing:-0.3px; margin-bottom:6px; }
+  .wod-live-sub{ font-size:11px; color:var(--w3); font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+
+  .podium-row{ display:flex; align-items:flex-end; gap:10px; margin-bottom:18px; }
+  .podium-col{ flex:1; display:flex; flex-direction:column; align-items:center; text-align:center; }
+  .podium-crown{ font-size:20px; color:var(--gold2); margin-bottom:4px; line-height:1; }
+  .podium-rankmark{ font-size:12px; font-weight:900; color:var(--w4); margin-bottom:4px; }
+  .podium-avatar-wrap{ position:relative; margin-bottom:8px; }
+  .podium-avatar{
+    width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:15px; color:#050505; border:3px solid transparent;
+  }
+  .podium-col.gold .podium-avatar{ border-color:var(--gold); background:radial-gradient(circle at 30% 30%, var(--gold2), var(--gold)); }
+  .podium-col.silver .podium-avatar{ border-color:var(--silver); background:radial-gradient(circle at 30% 30%, var(--silver2), var(--silver)); }
+  .podium-col.bronze .podium-avatar{ border-color:var(--bronze); background:radial-gradient(circle at 30% 30%, var(--bronze2), var(--bronze)); }
+  .podium-medal{
+    position:absolute; bottom:-2px; right:-2px; width:18px; height:18px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:900;
+    color:#050505; border:2px solid var(--bg1);
+  }
+  .podium-col.gold .podium-medal{ background:var(--gold2); }
+  .podium-col.silver .podium-medal{ background:var(--silver2); }
+  .podium-col.bronze .podium-medal{ background:var(--bronze2); }
+  .podium-name{ font-size:12px; font-weight:900; text-transform:uppercase; letter-spacing:0.2px; margin-bottom:3px; }
+  .podium-col.gold .podium-name{ color:var(--gold2); }
+  .podium-col.silver .podium-name{ color:var(--silver2); }
+  .podium-col.bronze .podium-name{ color:var(--bronze2); }
+  .podium-score{ font-size:9px; color:var(--w3); font-weight:700; margin-bottom:10px; line-height:1.35; min-height:24px; }
+  .podium-block{ width:100%; border-radius:8px 8px 0 0; }
+  .podium-col.gold .podium-block{ height:88px; background:rgba(212,168,67,0.14); }
+  .podium-col.silver .podium-block{ height:64px; background:rgba(143,168,190,0.14); }
+  .podium-col.bronze .podium-block{ height:48px; background:rgba(155,104,64,0.14); }
+
+  .podio-panel{ display:none; }
+  .podio-panel.active{ display:block; }
+  .podio-panel.on{ animation:fadeIn 0.2s ease; }
+
+  .mini-filter-row{ display:flex; gap:8px; margin-bottom:16px; overflow-x:auto; }
+  .mini-filter-btn{
+    background:var(--bg2); border:0.5px solid var(--border); color:var(--w4);
+    border-radius:20px; padding:7px 14px; font-size:10px; font-weight:900; text-transform:uppercase;
+    letter-spacing:0.5px; white-space:nowrap; flex-shrink:0;
+  }
+  .mini-filter-btn.active{ background:rgba(204,31,31,0.14); border-color:var(--border-red); color:var(--red2); }
+
+  .podio-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:0.5px solid var(--border); }
+  .podio-row.empty{ opacity:0.35; }
+  .podio-row .prow-num{ font-size:12px; font-weight:900; color:var(--w4); min-width:16px; }
+  .podio-row .prow-avatar{
+    width:38px; height:38px; border-radius:50%; flex-shrink:0;
+    background:radial-gradient(circle at 30% 30%, var(--red2), var(--red));
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:12px;
+  }
+  .podio-row .prow-info{ flex:1; min-width:0; }
+  .podio-row .prow-name-line{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .podio-row .prow-name{ font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.2px; }
+  .podio-row .prow-time{ font-size:10px; color:var(--w4); font-weight:700; margin-top:2px; text-transform:uppercase; letter-spacing:0.3px; }
+  .podio-row .prow-score{ font-size:15px; font-weight:900; flex-shrink:0; }
+
+  .pill{ font-size:8px; font-weight:900; text-transform:uppercase; letter-spacing:0.5px; border-radius:5px; padding:2px 6px; }
+  .pill-rx{ background:rgba(204,31,31,0.12); border:1px solid var(--border-red); color:var(--red2); }
+  .pill-scaled{ background:var(--bg3); color:var(--w3); }
+  .pill-pr{ background:rgba(76,217,122,0.12); border:1px solid rgba(76,217,122,0.3); color:var(--green); }
+  .pill-streak{ background:rgba(212,168,67,0.14); border:1px solid rgba(212,168,67,0.35); color:var(--gold2); }
+
+  .bar-row{ margin-bottom:14px; }
+  .bar-row-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  .bar-row-name{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+  .bar-row-value{ font-size:12px; font-weight:900; }
+  .bar-track{ height:6px; background:var(--bg3); border-radius:20px; overflow:hidden; }
+  .bar-fill{ height:100%; border-radius:20px; width:0%; transition:width 0.7s ease; }
+  .bar-fill.gold-bar{ background:linear-gradient(90deg, var(--gold), var(--gold2)); }
+  .bar-fill.red-bar{ background:linear-gradient(90deg, var(--red), var(--red2)); }
+
+  .top1-card{ background:var(--bg1); border-radius:6px; padding:16px; margin-top:6px; }
+  .top1-row{ display:flex; align-items:center; justify-content:space-between; padding:8px 0; gap:10px; }
+  .top1-row:not(:last-child){ border-bottom:0.5px solid var(--border); }
+  .top1-name{ font-size:13px; font-weight:700; text-transform:uppercase; }
+  .top1-count{ font-size:10px; color:var(--w3); font-weight:700; text-transform:uppercase; margin-top:2px; }
+  .top1-bonus{ font-size:13px; font-weight:900; color:var(--gold2); flex-shrink:0; }
+
+  .pr-feed-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:0.5px solid var(--border); }
+  .pr-feed-row:last-child{ border-bottom:none; }
+  .pr-feed-avatar{
+    width:34px; height:34px; border-radius:50%; flex-shrink:0;
+    background:radial-gradient(circle at 30% 30%, var(--red2), var(--red));
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:11px;
+  }
+  .pr-feed-info{ flex:1; min-width:0; }
+  .pr-feed-title{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.2px; }
+  .pr-feed-detail{ font-size:11px; color:var(--w3); font-weight:700; margin-top:2px; }
+  .pr-feed-side{ text-align:right; flex-shrink:0; }
+  .pr-feed-delta{ font-size:13px; font-weight:900; color:var(--green); }
+  .pr-feed-time{ font-size:9px; color:var(--w4); font-weight:700; text-transform:uppercase; margin-top:2px; }
+
+  .streak-banner{
+    display:flex; align-items:center; gap:12px;
+    background:rgba(212,168,67,0.12); border:1px solid rgba(212,168,67,0.35);
+    border-radius:6px; padding:14px 16px; margin-bottom:18px;
+  }
+  .streak-banner i{ font-size:22px; color:var(--gold2); flex-shrink:0; }
+  .streak-banner-text{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:0.3px; color:var(--gold2); line-height:1.4; }
+
+  .alltime-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:0.5px solid var(--border); }
+  .alltime-row .arow-rank{ font-size:13px; font-weight:900; color:var(--w4); min-width:20px; }
+  .alltime-row .arow-avatar{
+    width:36px; height:36px; border-radius:50%; flex-shrink:0;
+    background:radial-gradient(circle at 30% 30%, var(--red2), var(--red));
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:12px;
+  }
+  .alltime-row .arow-info{ flex:1; min-width:0; }
+  .alltime-row .arow-name{ font-size:13px; font-weight:700; text-transform:uppercase; }
+  .alltime-row .arow-meta{ font-size:10px; color:var(--w3); font-weight:700; margin-top:2px; text-transform:uppercase; }
+  .alltime-row .arow-pts{ font-size:14px; font-weight:900; flex-shrink:0; }
+
+  .points-card{ background:var(--bg1); border-radius:6px; padding:16px; margin-top:6px; }
+  .points-row{ display:flex; align-items:center; justify-content:space-between; padding:9px 0; gap:10px; }
+  .points-row:not(:last-child){ border-bottom:0.5px solid var(--border); }
+  .points-label{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.2px; color:var(--w2); }
+  .points-value{ font-size:13px; font-weight:900; flex-shrink:0; }
+  .points-value.pv-green{ color:var(--green); }
+  .points-value.pv-red{ color:var(--red2); }
+  .points-value.pv-gold{ color:var(--gold2); }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
   /* ================= BOTTOM NAV ================= */
   .bottom-nav{
@@ -598,30 +718,80 @@
     <div class="athletes-grid" id="athletes-grid"></div>
   </main>
 
-  <!-- ---- STATS / BENCHMARKS ---- -->
+  <!-- ---- PODIO ---- -->
   <main class="view screen" id="view-stats">
-    <div class="page-title">BENCHMARKS</div>
-    <div id="benchmarks-list"></div>
-
-    <div class="percentile-section">
-      <div class="percentile-label">TU PERCENTIL</div>
-      <div class="percentile-number"><span class="top-word">TOP</span> <span class="pct-word">22%</span></div>
-      <div class="percentile-sub">RANKING GLOBAL ENTRE ATLETAS RAGNAR BOX</div>
-      <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
+    <div class="page-title">PODIO</div>
+    <div class="tabs-row" id="podio-tabs">
+      <button class="tab-btn active" data-podio="hoy">HOY</button>
+      <button class="tab-btn" data-podio="semana">SEMANA</button>
+      <button class="tab-btn" data-podio="mes">MES</button>
+      <button class="tab-btn" data-podio="alltime">ALL TIME</button>
     </div>
 
-    <div class="page-pad" style="padding-top:20px; display:flex; flex-direction:column; gap:10px;">
-      <button class="btn-outline" id="add-benchmark-btn">+ ACTUALIZAR BENCHMARK</button>
-      <button class="btn-outline red-outline" id="analyze-ai-btn">ANALIZAR CON IA ↗</button>
+    <div class="page-pad">
+
+      <div class="podio-panel active on" id="podio-panel-hoy">
+        <div class="wod-live-card">
+          <div class="wod-live-top">
+            <div class="wod-tag"><span class="tag-rule"></span><span class="tag-name">WOD · <span id="podio-hoy-date">--</span></span></div>
+            <div class="wod-live-status"><span class="live-dot"></span><span>En vivo</span></div>
+          </div>
+          <div class="wod-live-title">CADA 5 MIN × 5 RONDAS</div>
+          <div class="wod-live-sub">200M RUN · 20 PULL-UPS · 20 T2B · 15 PUSH-UPS · 1 MIN DESCANSO</div>
+        </div>
+
+        <div class="podium-row" id="podium-hoy"></div>
+
+        <div class="mini-filter-row" id="hoy-filters">
+          <button class="mini-filter-btn active" data-filter="todos">TODOS</button>
+          <button class="mini-filter-btn" data-filter="rx">SOLO RX</button>
+          <button class="mini-filter-btn" data-filter="mujeres">MUJERES</button>
+          <button class="mini-filter-btn" data-filter="hombres">HOMBRES</button>
+        </div>
+
+        <div id="hoy-list"></div>
+      </div>
+
+      <div class="podio-panel" id="podio-panel-semana">
+        <div class="podium-row" id="podium-semana"></div>
+        <div class="section-title-podio">ASISTENCIA SEMANA 27</div>
+        <div id="semana-bars"></div>
+        <div class="top1-card">
+          <div class="section-title-podio" style="margin-top:0;">TOP 1 DEL DÍA ESTA SEMANA</div>
+          <div id="top1-list"></div>
+        </div>
+      </div>
+
+      <div class="podio-panel" id="podio-panel-mes">
+        <div class="podium-row" id="podium-mes"></div>
+        <div class="section-title-podio">PRs DE JULIO</div>
+        <div id="mes-bars"></div>
+        <div class="section-title-podio">ÚLTIMOS PRs</div>
+        <div id="pr-feed"></div>
+      </div>
+
+      <div class="podio-panel" id="podio-panel-alltime">
+        <div class="podium-row" id="podium-alltime"></div>
+        <div class="streak-banner">
+          <i class="ti ti-bolt" aria-hidden="true"></i>
+          <div class="streak-banner-text" id="streak-banner-text">--</div>
+        </div>
+        <div id="alltime-list"></div>
+        <div class="points-card">
+          <div class="section-title-podio" style="margin-top:0;">SISTEMA DE PUNTOS</div>
+          <div id="points-list"></div>
+        </div>
+      </div>
+
     </div>
   </main>
 
   <nav class="bottom-nav">
     <button class="nav-item active" data-view="home"><i class="ti ti-home" aria-hidden="true"></i><span>Inicio</span></button>
-    <button class="nav-item" data-view="rms"><i class="ti ti-trophy" aria-hidden="true"></i><span>RMs</span></button>
+    <button class="nav-item" data-view="rms"><i class="ti ti-barbell" aria-hidden="true"></i><span>RMs</span></button>
     <button class="nav-item" data-view="timer"><i class="ti ti-clock-play" aria-hidden="true"></i><span>Timer</span></button>
     <button class="nav-item" data-view="atletas"><i class="ti ti-users" aria-hidden="true"></i><span>Atletas</span></button>
-    <button class="nav-item" data-view="stats"><i class="ti ti-chart-bar" aria-hidden="true"></i><span>Stats</span></button>
+    <button class="nav-item" data-view="stats"><i class="ti ti-trophy" aria-hidden="true"></i><span>Podio</span></button>
   </nav>
 
 </div>
@@ -668,8 +838,8 @@
   }
 
   function logout(){
-    // Only clear the session flag — WOD results, RMs and benchmarks are athlete
-    // data that should survive logging out, not get wiped with the whole app.
+    // Only clear the session flag — WOD results and RMs are athlete data
+    // that should survive logging out, not get wiped with the whole app.
     localStorage.removeItem('ragnar_session');
 
     if(typeof pauseTimer === 'function'){ pauseTimer(); }
@@ -1034,67 +1204,248 @@
   }
   renderAthletes();
 
-  /* ---------------- STATS / BENCHMARKS ---------------- */
-  var BENCHMARKS_KEY = 'ragnar_benchmarks';
-  var DEFAULT_BENCHMARKS = [
-    { name:'Fran', desc:'21-15-9 THRUSTERS / PULL-UPS', value:'3:48', pr:true },
-    { name:'Grace', desc:'30 CLEAN & JERK FOR TIME', value:'2:11', pr:false },
-    { name:'Cindy', desc:'AMRAP 20 · PULL-UP/PUSH-UP/SQUAT', value:'24 RDS', pr:false },
-    { name:'DT', desc:'5 RONDAS · DEADLIFT/HANG CLEAN/PUSH JERK', value:'6:02', pr:false },
-    { name:'Isabel', desc:'30 SNATCH FOR TIME', value:'4:44', pr:false }
-  ];
+  /* ---------------- PODIO ---------------- */
+  var ATHLETE_GENDER = {
+    'Javier':'m', 'Mafe':'f', 'Carlos':'m', 'Sthepa':'f', 'Bryam':'m', 'J. Sebastian':'m',
+    'Damaris':'f', 'Henry':'m', 'Valentina':'f', 'Sara':'f', 'Alejandro':'m'
+  };
 
-  function getBenchmarks(){
-    var stored = localStorage.getItem(BENCHMARKS_KEY);
-    if(!stored){
-      localStorage.setItem(BENCHMARKS_KEY, JSON.stringify(DEFAULT_BENCHMARKS));
-      return DEFAULT_BENCHMARKS.slice();
-    }
-    try{ return JSON.parse(stored); }catch(e){ return DEFAULT_BENCHMARKS.slice(); }
+  function podiumColHtml(rank, metal, entry){
+    var crown = metal === 'gold' ? '<div class="podium-crown">&#9812;</div>' : '<div class="podium-rankmark">#' + rank + '</div>';
+    return '<div class="podium-col ' + metal + '">' +
+      crown +
+      '<div class="podium-avatar-wrap"><div class="podium-avatar">' + escapeHtml(initials(entry.name)) + '</div><div class="podium-medal">' + rank + '</div></div>' +
+      '<div class="podium-name">' + escapeHtml(entry.name) + '</div>' +
+      '<div class="podium-score">' + escapeHtml(entry.score) + '</div>' +
+      '<div class="podium-block"></div>' +
+    '</div>';
   }
-  function saveBenchmarks(list){ localStorage.setItem(BENCHMARKS_KEY, JSON.stringify(list)); }
+  function renderPodium(containerId, data){
+    document.getElementById(containerId).innerHTML =
+      podiumColHtml(2, 'silver', data.silver) +
+      podiumColHtml(1, 'gold', data.gold) +
+      podiumColHtml(3, 'bronze', data.bronze);
+  }
 
-  function renderBenchmarks(){
-    var list = getBenchmarks();
-    var container = document.getElementById('benchmarks-list');
-    container.innerHTML = '';
-    list.forEach(function(b, idx){
-      var row = document.createElement('div');
-      row.className = 'benchmark-row';
-      var num = (idx + 1 < 10 ? '0' : '') + (idx + 1);
-      row.innerHTML =
-        '<div class="bm-num">' + num + '</div>' +
-        '<div class="bm-info">' +
-          '<div class="bm-name-row"><span class="bm-name">' + escapeHtml(b.name.toUpperCase()) + '</span>' + (b.pr ? '<span class="bm-pr">PR</span>' : '') + '</div>' +
-          '<div class="bm-desc">' + escapeHtml(b.desc || '') + '</div>' +
-        '</div>' +
-        '<div class="bm-value">' + escapeHtml(b.value) + '</div>';
-      container.appendChild(row);
+  function animateBars(scopeEl){
+    var bars = scopeEl.querySelectorAll('.bar-fill');
+    bars.forEach(function(b){ b.style.width = '0%'; });
+    requestAnimationFrame(function(){
+      requestAnimationFrame(function(){
+        bars.forEach(function(b){ b.style.width = b.dataset.target + '%'; });
+      });
     });
   }
-  renderBenchmarks();
 
-  document.getElementById('add-benchmark-btn').addEventListener('click', function(){
-    var name = prompt('Nombre del benchmark (ej: Fran, Grace, Murph):');
-    if(!name) return;
-    var value = prompt('Resultado (ej: 3:45 o 22 rondas):');
-    if(!value) return;
-    var isPr = confirm('¿Es un nuevo PR?');
-    var list = getBenchmarks();
-    var existing = list.find(function(b){ return b.name.toLowerCase() === name.trim().toLowerCase(); });
-    if(existing){
-      existing.value = value.trim();
-      existing.pr = isPr;
-    } else {
-      list.push({ name: name.trim(), desc:'', value: value.trim(), pr: isPr });
-    }
-    saveBenchmarks(list);
-    renderBenchmarks();
+  /* ---- HOY ---- */
+  var HOY_RESULTS = [
+    { rank:1, name:'Damaris', score:'5+8', tag:'RX', time:'HACE 12 MIN' },
+    { rank:2, name:'Javier', score:'5+3', tag:'RX', time:'HACE 18 MIN' },
+    { rank:3, name:'Bryam', score:'4+18', tag:'RX', time:'HACE 31 MIN' },
+    { rank:4, name:'Sthepa', score:'4+12', tag:'RX', time:'HACE 44 MIN' },
+    { rank:5, name:'Mafe', score:'4+8', tag:'Scaled', time:'HACE 58 MIN' },
+    { rank:6, name:'J. Sebastian', score:'3+15', tag:'RX', time:'HACE 2H' },
+    { rank:7, name:'Henry', score:null, tag:null, time:null },
+    { rank:8, name:'Valentina', score:null, tag:null, time:null }
+  ];
+
+  function renderHoyList(filter){
+    var list = HOY_RESULTS.filter(function(a){
+      if(filter === 'rx') return a.tag === 'RX';
+      if(filter === 'mujeres') return ATHLETE_GENDER[a.name] === 'f';
+      if(filter === 'hombres') return ATHLETE_GENDER[a.name] === 'm';
+      return true;
+    });
+    document.getElementById('hoy-list').innerHTML = list.map(function(a){
+      var isEmpty = !a.score;
+      var pillHtml = a.tag ? '<span class="pill ' + (a.tag === 'RX' ? 'pill-rx' : 'pill-scaled') + '">' + escapeHtml(a.tag.toUpperCase()) + '</span>' : '';
+      return '<div class="podio-row' + (isEmpty ? ' empty' : '') + '">' +
+        '<div class="prow-num">' + a.rank + '</div>' +
+        '<div class="prow-avatar">' + escapeHtml(initials(a.name)) + '</div>' +
+        '<div class="prow-info">' +
+          '<div class="prow-name-line"><span class="prow-name">' + escapeHtml(a.name) + '</span>' + pillHtml + '</div>' +
+          '<div class="prow-time">' + (a.time || 'SIN REGISTRAR') + '</div>' +
+        '</div>' +
+        '<div class="prow-score">' + (a.score || '—') + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderPodioHoy(){
+    document.getElementById('podio-hoy-date').textContent = formatShortDate(new Date()).toUpperCase();
+    renderPodium('podium-hoy', {
+      gold:{ name:'Damaris', score:'5 RONDAS + 8' },
+      silver:{ name:'Javier', score:'5 RONDAS + 3' },
+      bronze:{ name:'Bryam', score:'4 RONDAS + 18' }
+    });
+    renderHoyList('todos');
+  }
+
+  document.querySelectorAll('#hoy-filters .mini-filter-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#hoy-filters .mini-filter-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      renderHoyList(btn.dataset.filter);
+    });
   });
 
-  document.getElementById('analyze-ai-btn').addEventListener('click', function(){
-    alert('Análisis con IA próximamente disponible.');
+  /* ---- SEMANA ---- */
+  function renderPodioSemana(){
+    renderPodium('podium-semana', {
+      gold:{ name:'Damaris', score:'5/5 · 4 TOP3' },
+      silver:{ name:'Javier', score:'5/5 · 3 TOP3' },
+      bronze:{ name:'Mafe', score:'5/5 · 2 TOP3' }
+    });
+
+    var attendance = [
+      { name:'Damaris', frac:'5/5', pct:100, gold:true },
+      { name:'Javier', frac:'5/5', pct:100, gold:true },
+      { name:'Mafe', frac:'5/5', pct:100, gold:true },
+      { name:'Bryam', frac:'4/5', pct:80, gold:false },
+      { name:'Sthepa', frac:'4/5', pct:80, gold:false },
+      { name:'J. Sebastian', frac:'3/5', pct:60, gold:false },
+      { name:'Henry', frac:'2/5', pct:40, gold:false }
+    ];
+    var barsContainer = document.getElementById('semana-bars');
+    barsContainer.innerHTML = attendance.map(function(a){
+      return '<div class="bar-row">' +
+        '<div class="bar-row-top"><span class="bar-row-name">' + escapeHtml(a.name) + '</span><span class="bar-row-value">' + a.frac + '</span></div>' +
+        '<div class="bar-track"><div class="bar-fill ' + (a.gold ? 'gold-bar' : 'red-bar') + '" data-target="' + a.pct + '"></div></div>' +
+      '</div>';
+    }).join('');
+
+    var top1 = [
+      { name:'Damaris', count:'4 VECES PRIMERO', bonus:'+200 PTS' },
+      { name:'Bryam', count:'1 VEZ PRIMERO', bonus:'+50 PTS' }
+    ];
+    document.getElementById('top1-list').innerHTML = top1.map(function(t){
+      return '<div class="top1-row">' +
+        '<div><div class="top1-name">' + escapeHtml(t.name) + '</div><div class="top1-count">' + t.count + '</div></div>' +
+        '<div class="top1-bonus">' + t.bonus + '</div>' +
+      '</div>';
+    }).join('');
+
+    return barsContainer;
+  }
+
+  /* ---- MES ---- */
+  function renderPodioMes(){
+    renderPodium('podium-mes', {
+      gold:{ name:'Damaris', score:'6 PRs · +22 KG' },
+      silver:{ name:'Bryam', score:'4 PRs · +13 KG' },
+      bronze:{ name:'Valentina', score:'3 PRs · +8 KG' }
+    });
+
+    var prBars = [
+      { name:'Damaris', count:6, pct:100, gold:true },
+      { name:'Bryam', count:4, pct:67, gold:false },
+      { name:'Valentina', count:3, pct:50, gold:false },
+      { name:'Javier', count:3, pct:50, gold:false },
+      { name:'Mafe', count:2, pct:33, gold:false },
+      { name:'Sara', count:2, pct:33, gold:false }
+    ];
+    var barsContainer = document.getElementById('mes-bars');
+    barsContainer.innerHTML = prBars.map(function(p){
+      return '<div class="bar-row">' +
+        '<div class="bar-row-top"><span class="bar-row-name">' + escapeHtml(p.name) + '</span><span class="bar-row-value">' + p.count + '</span></div>' +
+        '<div class="bar-track"><div class="bar-fill ' + (p.gold ? 'gold-bar' : 'red-bar') + '" data-target="' + p.pct + '"></div></div>' +
+      '</div>';
+    }).join('');
+
+    var feed = [
+      { name:'Damaris', move:'Back Squat', from:95, to:102, unit:'KG', delta:'+7 KG', time:'HACE 1 DÍA' },
+      { name:'Bryam', move:'Snatch', from:80, to:85, unit:'KG', delta:'+5 KG', time:'HACE 3 DÍAS' },
+      { name:'Valentina', move:'Pull-Ups', from:18, to:22, unit:'REPS', delta:'+4', time:'HACE 5 DÍAS' }
+    ];
+    document.getElementById('pr-feed').innerHTML = feed.map(function(f){
+      return '<div class="pr-feed-row">' +
+        '<div class="pr-feed-avatar">' + escapeHtml(initials(f.name)) + '</div>' +
+        '<div class="pr-feed-info">' +
+          '<div class="pr-feed-title">' + escapeHtml(f.name) + ' · ' + escapeHtml(f.move) + '</div>' +
+          '<div class="pr-feed-detail">' + f.from + ' → ' + f.to + ' ' + f.unit + '</div>' +
+        '</div>' +
+        '<div class="pr-feed-side">' +
+          '<div class="pr-feed-delta">' + f.delta + '</div>' +
+          '<div class="pr-feed-time">' + f.time + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+
+    return barsContainer;
+  }
+
+  /* ---- ALL TIME ---- */
+  function renderPodioAllTime(){
+    renderPodium('podium-alltime', {
+      gold:{ name:'Damaris', score:'1,520 PTS' },
+      silver:{ name:'Javier', score:'1,380 PTS' },
+      bronze:{ name:'Mafe', score:'1,240 PTS' }
+    });
+
+    document.getElementById('streak-banner-text').innerHTML = 'RACHA MÁS LARGA ACTIVA<br>DAMARIS · IMPARABLE · 14 DÍAS';
+
+    var ranking = [
+      { name:'Damaris', meta:'RACHA 14 · 6 PRs', pts:'1,520' },
+      { name:'Javier', meta:'RACHA 12 · 5 PRs', pts:'1,380' },
+      { name:'Mafe', meta:'RACHA 8 · 4 PRs', pts:'1,240' },
+      { name:'Bryam', meta:'RACHA 5', pts:'1,190' },
+      { name:'Sthepa', meta:'22 RX', pts:'980' },
+      { name:'J. Sebastian', meta:'5 PRs', pts:'890' },
+      { name:'Carlos', meta:'', pts:'710' },
+      { name:'Sara', meta:'', pts:'640' },
+      { name:'Alejandro', meta:'', pts:'590' },
+      { name:'Valentina', meta:'', pts:'480' },
+      { name:'Henry', meta:'', pts:'390' }
+    ];
+    document.getElementById('alltime-list').innerHTML = ranking.map(function(r, idx){
+      return '<div class="alltime-row">' +
+        '<div class="arow-rank">' + (idx + 1) + '</div>' +
+        '<div class="arow-avatar">' + escapeHtml(initials(r.name)) + '</div>' +
+        '<div class="arow-info"><div class="arow-name">' + escapeHtml(r.name) + '</div>' + (r.meta ? '<div class="arow-meta">' + r.meta + '</div>' : '') + '</div>' +
+        '<div class="arow-pts">' + r.pts + '</div>' +
+      '</div>';
+    }).join('');
+
+    var points = [
+      { label:'ASISTIR AL WOD', value:'+10', cls:'' },
+      { label:'COMPLETAR EN RX', value:'+15', cls:'' },
+      { label:'ROMPER UN RM', value:'+25', cls:'pv-green' },
+      { label:'QUEDAR #1 DEL DÍA', value:'+50', cls:'pv-red' },
+      { label:'RACHA 5 DÍAS', value:'+30 BONUS', cls:'pv-gold' },
+      { label:'RACHA 10 DÍAS', value:'+75 BONUS', cls:'pv-gold' },
+      { label:'RACHA 20 DÍAS', value:'+200 BONUS', cls:'pv-gold' }
+    ];
+    document.getElementById('points-list').innerHTML = points.map(function(p){
+      return '<div class="points-row"><span class="points-label">' + p.label + '</span><span class="points-value ' + p.cls + '">' + p.value + '</span></div>';
+    }).join('');
+  }
+
+  var PODIO_RENDERED = {};
+  function ensurePodioTabRendered(tab){
+    if(PODIO_RENDERED[tab]) return;
+    PODIO_RENDERED[tab] = true;
+    if(tab === 'hoy'){ renderPodioHoy(); }
+    else if(tab === 'semana'){ renderPodioSemana(); }
+    else if(tab === 'mes'){ renderPodioMes(); }
+    else if(tab === 'alltime'){ renderPodioAllTime(); }
+  }
+
+  document.querySelectorAll('#podio-tabs .tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#podio-tabs .tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.podio-panel').forEach(function(p){ p.classList.remove('active'); p.classList.remove('on'); });
+      var tab = btn.dataset.podio;
+      var panel = document.getElementById('podio-panel-' + tab);
+      panel.classList.add('active');
+      panel.classList.add('on');
+      ensurePodioTabRendered(tab);
+      if(tab === 'semana' || tab === 'mes'){ animateBars(panel); }
+    });
   });
+
+  renderPodioHoy();
+  PODIO_RENDERED.hoy = true;
 
   /* ---------------- SERVICE WORKER ---------------- */
   if('serviceWorker' in navigator){
