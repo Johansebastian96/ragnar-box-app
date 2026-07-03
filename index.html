@@ -49,13 +49,18 @@
     overflow-y:auto;
     position:fixed;
   }
+  .splash-bg{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; opacity:0.35; z-index:0; pointer-events:none;
+  }
   .splash-watermark{
     position:absolute; top:50%; left:50%; transform:translate(-50%,-58%);
     font-size:180px; font-weight:900; color:var(--red); opacity:0.06;
-    line-height:1; pointer-events:none; user-select:none;
+    line-height:1; pointer-events:none; user-select:none; z-index:1;
   }
-  .splash-rings{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none; }
+  .splash-rings{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none; z-index:1; }
   .splash-content{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; }
+  .splash-logo-img{ width:140px; display:block; margin-bottom:14px; }
   .splash-wordmark{ font-size:42px; font-weight:900; text-transform:uppercase; letter-spacing:6px; color:var(--white); }
   .splash-sub{ font-size:11px; font-weight:700; letter-spacing:6px; color:var(--w4); margin-top:4px; }
   .splash-rule{ width:40px; height:2px; background:var(--red); margin:20px 0; border:none; }
@@ -107,6 +112,13 @@
   }
   .page-title .accent{ color:var(--red); }
 
+  .rm-hero, .atletas-hero{ position:relative; overflow:hidden; }
+  .rm-hero-bg, .atletas-hero-bg{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; opacity:0.2; z-index:0; pointer-events:none;
+  }
+  .rm-hero .page-title, .atletas-hero .page-title{ position:relative; z-index:1; }
+
   .section-row{
     display:flex; align-items:baseline; justify-content:space-between;
     padding:0 0 12px;
@@ -125,10 +137,14 @@
     overflow:hidden;
     display:flex; flex-direction:column; justify-content:space-between;
   }
+  .hero-bg{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; opacity:0.25; z-index:0; pointer-events:none;
+  }
   .hero-watermark{
     position:absolute; top:50%; right:-30px; transform:translateY(-50%);
     font-size:220px; font-weight:900; color:var(--red); opacity:0.06; line-height:1;
-    pointer-events:none; user-select:none;
+    pointer-events:none; user-select:none; z-index:1;
   }
   .hero-topbar{
     position:relative; z-index:1;
@@ -356,12 +372,28 @@
   .nav-item.active{ color:var(--red2); }
 
   ::-webkit-scrollbar{ width:0; height:0; }
+
+  /* ================= ANIMATIONS ================= */
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+  @keyframes logoIn { from { opacity:0; transform:scale(0.85) } to { opacity:1; transform:scale(1) } }
+  @keyframes pulse { 0%,100% { opacity:1; transform:scale(1) } 50% { opacity:0.5; transform:scale(0.8) } }
+  @keyframes shimmer { 0% { left:-100% } 50%,100% { left:150% } }
+  @keyframes beat { 0%,100% { transform:scale(1) } 50% { transform:scale(1.02) } }
+
+  .screen.on { animation: fadeIn 0.3s ease }
+  .splash-logo-img { animation: logoIn 0.8s cubic-bezier(0.16,1,0.3,1) forwards }
+  .hero-dot { animation: pulse 2s infinite }
+  .splash-cta { position:relative; overflow:hidden }
+  .splash-cta::after { content:''; position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent); animation:shimmer 3s infinite }
+
+  .timer-urgent { animation: beat 0.5s infinite }
 </style>
 </head>
 <body>
 
 <!-- ================= SPLASH / LOGIN ================= -->
-<div id="splash-screen">
+<div id="splash-screen" class="screen on">
+  <img class="splash-bg" src="./assets/hero-splash.jpg" alt="">
   <div class="splash-watermark">R</div>
   <svg class="splash-rings" width="320" height="320" viewBox="0 0 320 320">
     <circle cx="160" cy="160" r="155" fill="none" stroke="#CC1F1F" stroke-opacity="0.08" stroke-width="1.5"/>
@@ -370,6 +402,7 @@
   </svg>
 
   <div class="splash-content">
+    <img class="splash-logo-img" src="./assets/logo.png" alt="Ragnar Box">
     <div class="splash-wordmark">RAGNAR</div>
     <div class="splash-sub">BOX</div>
     <hr class="splash-rule">
@@ -385,7 +418,7 @@
         <input type="password" id="login-password" placeholder="Contraseña" autocomplete="current-password" required>
       </div>
       <div class="login-error" id="login-error">Credenciales incorrectas. Verifica tu correo y contraseña.</div>
-      <button type="submit" class="btn-primary">ENTRAR AL BOX</button>
+      <button type="submit" class="btn-primary splash-cta">ENTRAR AL BOX</button>
     </form>
     <div class="splash-date" id="splash-date">--</div>
   </div>
@@ -395,15 +428,16 @@
 <div id="app">
 
   <!-- ---- HOME ---- -->
-  <main class="view active" id="view-home">
+  <main class="view screen active on" id="view-home">
     <div class="hero">
+      <img class="hero-bg" src="./assets/hero-wod.jpg" alt="">
       <div class="hero-watermark">R</div>
       <div class="hero-topbar">
         <div class="hero-logo">RAGNAR</div>
         <div class="hero-avatar">A</div>
       </div>
       <div class="hero-body">
-        <div class="hero-eyebrow"><span class="dot"></span><span>HOY · COACH CLAUDIA</span></div>
+        <div class="hero-eyebrow"><span class="dot hero-dot"></span><span>HOY · COACH CLAUDIA</span></div>
         <div class="hero-title">WOD<br>DEL DÍA</div>
         <div class="hero-subtitle" id="hero-date">--</div>
       </div>
@@ -485,8 +519,11 @@
   </main>
 
   <!-- ---- RMs ---- -->
-  <main class="view" id="view-rms">
-    <div class="page-title">MIS <span class="accent">RM</span>S</div>
+  <main class="view screen" id="view-rms">
+    <div class="rm-hero">
+      <img class="rm-hero-bg" src="./assets/hero-rm.jpg" alt="">
+      <div class="page-title">MIS <span class="accent">RM</span>S</div>
+    </div>
     <div class="tabs-row" id="rm-tabs">
       <button class="tab-btn active" data-cat="olimpicos">OLÍMPICO</button>
       <button class="tab-btn" data-cat="fuerza">FUERZA</button>
@@ -501,7 +538,7 @@
   </main>
 
   <!-- ---- TIMER ---- -->
-  <main class="view" id="view-timer">
+  <main class="view screen" id="view-timer">
     <div class="page-title">TIMER</div>
     <div class="tabs-row" id="timer-modes">
       <button class="tab-btn active" data-mode="cada5">5 MIN</button>
@@ -529,8 +566,11 @@
   </main>
 
   <!-- ---- ATLETAS ---- -->
-  <main class="view" id="view-atletas">
-    <div class="page-title">EQUIPO</div>
+  <main class="view screen" id="view-atletas">
+    <div class="atletas-hero">
+      <img class="atletas-hero-bg" src="./assets/hero-team.jpg" alt="">
+      <div class="page-title">EQUIPO</div>
+    </div>
     <div class="coach-card">
       <div class="avatar">CL<span class="presence-dot active"></span></div>
       <div class="coach-info">
@@ -549,7 +589,7 @@
   </main>
 
   <!-- ---- STATS / BENCHMARKS ---- -->
-  <main class="view" id="view-stats">
+  <main class="view screen" id="view-stats">
     <div class="page-title">BENCHMARKS</div>
     <div id="benchmarks-list"></div>
 
@@ -631,9 +671,11 @@
   navItems.forEach(function(btn){
     btn.addEventListener('click', function(){
       navItems.forEach(function(b){ b.classList.remove('active'); });
-      views.forEach(function(v){ v.classList.remove('active'); });
+      views.forEach(function(v){ v.classList.remove('active'); v.classList.remove('on'); });
       btn.classList.add('active');
-      document.getElementById('view-' + btn.dataset.view).classList.add('active');
+      var nextView = document.getElementById('view-' + btn.dataset.view);
+      nextView.classList.add('active');
+      nextView.classList.add('on');
     });
   });
 
@@ -831,9 +873,9 @@
     timerDisplay.textContent = fmtTime(timerState.timeLeft);
     var isLastTen = timerState.timeLeft <= 10 && timerState.timeLeft > 0 && timerState.running;
     if(isLastTen){
-      timerDisplay.classList.add('danger');
+      timerDisplay.classList.add('danger', 'timer-urgent');
     } else {
-      timerDisplay.classList.remove('danger');
+      timerDisplay.classList.remove('danger', 'timer-urgent');
     }
   }
 
