@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ragnar-box-v1';
+const CACHE_NAME = 'ragnar-box-v2';
 const PRECACHE_URLS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', (event) => {
@@ -22,6 +22,24 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
+  const isNavigation = event.request.mode === 'navigate' || event.request.destination === 'document';
+
+  if (isNavigation) {
+    // Network-first for the HTML shell: deployed fixes must reach users immediately.
+    // The cache here only serves as an offline fallback, never as the primary source.
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Cache-first for static assets (manifest, images), refreshed in the background.
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const networkFetch = fetch(event.request)
@@ -32,7 +50,7 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => cached || caches.match('./index.html'));
+        .catch(() => cached);
 
       return cached || networkFetch;
     })

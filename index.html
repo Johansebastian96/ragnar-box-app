@@ -47,7 +47,6 @@
     background:var(--bg0);
     padding:32px 24px;
     overflow-y:auto;
-    position:fixed;
   }
   .splash-bg{
     position:absolute; inset:0; width:100%; height:100%;
@@ -371,6 +370,15 @@
   .nav-item span{ font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
   .nav-item.active{ color:var(--red2); }
 
+  /* ================= LOGOUT ================= */
+  .logout-btn{
+    position:fixed; top:18px; right:64px; z-index:21;
+    width:34px; height:34px; border-radius:50%;
+    background:var(--bg1); border:1px solid var(--border-red); color:var(--red2);
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+  }
+  .logout-btn:active{ background:var(--bg2); }
+
   ::-webkit-scrollbar{ width:0; height:0; }
 
   /* ================= ANIMATIONS ================= */
@@ -426,6 +434,8 @@
 
 <!-- ================= APP ================= -->
 <div id="app">
+
+  <button class="logout-btn" id="logout-btn" aria-label="Cerrar sesión"><i class="ti ti-logout"></i></button>
 
   <!-- ---- HOME ---- -->
   <main class="view screen active on" id="view-home">
@@ -633,6 +643,15 @@
     return d.getDate() + ' ' + MESES[d.getMonth()].slice(0,3) + '. ' + d.getFullYear();
   }
 
+  function escapeHtml(str){
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   var now = new Date();
   document.getElementById('splash-date').textContent = formatLongDate(now).toUpperCase();
   document.getElementById('hero-date').textContent = formatLongDate(now).toUpperCase();
@@ -648,6 +667,29 @@
     app.classList.add('active');
   }
 
+  function logout(){
+    // Only clear the session flag — WOD results, RMs and benchmarks are athlete
+    // data that should survive logging out, not get wiped with the whole app.
+    localStorage.removeItem('ragnar_session');
+
+    if(typeof pauseTimer === 'function'){ pauseTimer(); }
+    if(typeof resetTimer === 'function'){ resetTimer(); }
+
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-password').value = '';
+    loginError.classList.remove('show');
+
+    navItems.forEach(function(b){ b.classList.remove('active'); });
+    views.forEach(function(v){ v.classList.remove('active'); v.classList.remove('on'); });
+    document.querySelector('.nav-item[data-view="home"]').classList.add('active');
+    var homeView = document.getElementById('view-home');
+    homeView.classList.add('active');
+    homeView.classList.add('on');
+
+    app.classList.remove('active');
+    splash.classList.remove('hidden');
+  }
+
   if(localStorage.getItem('ragnar_session') === 'active'){
     enterApp();
   }
@@ -655,7 +697,7 @@
   loginForm.addEventListener('submit', function(e){
     e.preventDefault();
     var email = document.getElementById('login-email').value.trim().toLowerCase();
-    var pass = document.getElementById('login-password').value;
+    var pass = document.getElementById('login-password').value.trim();
     if(email === AUTH_EMAIL && pass === AUTH_PASS){
       loginError.classList.remove('show');
       localStorage.setItem('ragnar_session', 'active');
@@ -664,6 +706,8 @@
       loginError.classList.add('show');
     }
   });
+
+  document.getElementById('logout-btn').addEventListener('click', logout);
 
   /* ---------------- NAV ---------------- */
   var navItems = document.querySelectorAll('.nav-item');
@@ -710,13 +754,17 @@
   document.querySelectorAll('[data-save]').forEach(function(btn){
     btn.addEventListener('click', function(){
       var id = btn.dataset.save;
-      var rounds = document.getElementById(id + '-rounds').value || '0';
-      var reps = document.getElementById(id + '-reps').value || '0';
+      var roundsInput = document.getElementById(id + '-rounds');
+      var repsInput = document.getElementById(id + '-reps');
+      var rounds = roundsInput.value || '0';
+      var reps = repsInput.value || '0';
       var results = getWodResults();
       results[id] = { rounds: rounds, reps: reps, date: formatShortDate(new Date()) };
       saveWodResults(results);
       renderSavedResult(id);
       document.getElementById('form-' + id).classList.remove('show');
+      roundsInput.value = '';
+      repsInput.value = '';
     });
   });
 
@@ -762,7 +810,7 @@
         }).join('');
         card.innerHTML =
           '<div class="rm-item-head">' +
-            '<div class="rm-name">' + rm.name + '</div>' +
+            '<div class="rm-name">' + escapeHtml(rm.name) + '</div>' +
             '<div class="rm-right"><div class="rm-value">' + rm.value + (rm.unit === 'kg' ? 'KG' : '') + '</div><i class="ti ti-chevron-down chev"></i></div>' +
           '</div>' +
           '<div class="rm-percents">' +
@@ -1017,10 +1065,10 @@
       row.innerHTML =
         '<div class="bm-num">' + num + '</div>' +
         '<div class="bm-info">' +
-          '<div class="bm-name-row"><span class="bm-name">' + b.name.toUpperCase() + '</span>' + (b.pr ? '<span class="bm-pr">PR</span>' : '') + '</div>' +
-          '<div class="bm-desc">' + (b.desc || '') + '</div>' +
+          '<div class="bm-name-row"><span class="bm-name">' + escapeHtml(b.name.toUpperCase()) + '</span>' + (b.pr ? '<span class="bm-pr">PR</span>' : '') + '</div>' +
+          '<div class="bm-desc">' + escapeHtml(b.desc || '') + '</div>' +
         '</div>' +
-        '<div class="bm-value">' + b.value + '</div>';
+        '<div class="bm-value">' + escapeHtml(b.value) + '</div>';
       container.appendChild(row);
     });
   }
