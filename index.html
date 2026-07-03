@@ -7,29 +7,31 @@
 <meta name="description" content="App de entrenamiento para atletas de Ragnar Box">
 <meta name="theme-color" content="#CC1F1F">
 <link rel="manifest" href="./manifest.json">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080808'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='58' fill='%23CC1F1F' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23080808'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='58' fill='%23CC1F1F' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%23050505'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='58' fill='%23CC1F1F' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%23050505'/%3E%3Ctext x='50' y='68' font-family='Arial' font-weight='900' font-size='58' fill='%23CC1F1F' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
   :root{
-    --bg:#080808;
-    --surface-1:#101010;
-    --surface-2:#181818;
-    --accent:#CC1F1F;
-    --accent-2:#E02020;
-    --text:#F2EFE9;
-    --text-dim:#9a9690;
-    --border:rgba(255,255,255,0.06);
-    --border-accent:rgba(204,31,31,0.28);
-    --radius-card:12px;
-    --radius-el:10px;
+    --bg0:#050505;
+    --bg1:#0D0D0D;
+    --bg2:#161616;
+    --bg3:#1E1E1E;
+    --red:#CC1F1F;
+    --red2:#E02020;
+    --white:#FFFFFF;
+    --w2:#E8E5DF;
+    --w3:#A09D97;
+    --w4:#504E4A;
+    --border:rgba(255,255,255,0.05);
+    --border-red:rgba(204,31,31,0.3);
+    --green:#4CD97A;
   }
-  *{box-sizing:border-box; margin:0; padding:0;}
+  *{ box-sizing:border-box; margin:0; padding:0; }
   html,body{
     height:100%;
-    background:var(--bg);
-    color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg0);
+    color:var(--white);
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
     -webkit-tap-highlight-color:transparent;
     overscroll-behavior:none;
   }
@@ -38,279 +40,320 @@
   input{ font-family:inherit; }
   .hidden{ display:none !important; }
 
-  /* ---------- Splash / Login ---------- */
+  /* ================= SPLASH / LOGIN ================= */
   #splash-screen{
     position:fixed; inset:0; z-index:50;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    background:
-      radial-gradient(circle at 50% 20%, rgba(204,31,31,0.10), transparent 60%),
-      var(--bg);
+    background:var(--bg0);
     padding:32px 24px;
     overflow-y:auto;
+    position:fixed;
   }
-  .splash-logo-wrap{ position:relative; width:180px; height:180px; margin-bottom:8px; }
-  .splash-rings{ position:absolute; inset:0; }
-  .splash-brand{ text-align:center; margin-bottom:6px; }
-  .splash-brand .agnar{ font-size:30px; font-weight:800; letter-spacing:4px; color:var(--text); }
-  .splash-brand .agnar .r-letter{ color:var(--accent); }
-  .splash-brand .box{ font-size:14px; font-weight:700; letter-spacing:8px; color:var(--text-dim); margin-top:2px; }
-  .splash-date{ font-size:13px; color:var(--text-dim); margin-top:14px; text-transform:capitalize; }
-  .splash-tagline{ font-size:14px; color:var(--accent-2); font-weight:600; letter-spacing:1px; margin-top:6px; margin-bottom:28px; }
+  .splash-watermark{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-58%);
+    font-size:180px; font-weight:900; color:var(--red); opacity:0.06;
+    line-height:1; pointer-events:none; user-select:none;
+  }
+  .splash-rings{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none; }
+  .splash-content{ position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; }
+  .splash-wordmark{ font-size:42px; font-weight:900; text-transform:uppercase; letter-spacing:6px; color:var(--white); }
+  .splash-sub{ font-size:11px; font-weight:700; letter-spacing:6px; color:var(--w4); margin-top:4px; }
+  .splash-rule{ width:40px; height:2px; background:var(--red); margin:20px 0; border:none; }
+  .splash-tagline{ font-size:11px; font-weight:700; letter-spacing:4px; color:var(--w4); margin-bottom:34px; text-align:center; }
 
-  .login-form{ width:100%; max-width:340px; display:flex; flex-direction:column; gap:14px; }
+  .login-form{ width:100%; max-width:340px; display:flex; flex-direction:column; gap:10px; position:relative; z-index:1; }
   .input-group{
     display:flex; align-items:center; gap:10px;
-    background:var(--surface-1);
+    background:var(--bg3);
     border:1px solid var(--border);
-    border-radius:var(--radius-el);
-    padding:13px 14px;
+    border-radius:4px;
+    padding:15px 14px;
   }
-  .input-group:focus-within{ border-color:var(--border-accent); }
-  .input-group i{ color:var(--accent-2); font-size:18px; flex-shrink:0; }
+  .input-group:focus-within{ border-color:var(--border-red); }
+  .input-group i{ color:var(--red2); font-size:16px; flex-shrink:0; }
   .input-group input{
-    background:transparent; border:none; outline:none; color:var(--text);
-    font-size:15px; width:100%;
+    background:transparent; border:none; outline:none; color:var(--white);
+    font-size:14px; font-weight:700; width:100%; text-transform:uppercase; letter-spacing:0.3px;
   }
-  .input-group input::placeholder{ color:var(--text-dim); }
+  .input-group input::placeholder{ color:var(--w4); text-transform:uppercase; font-weight:700; letter-spacing:0.5px; }
 
   .btn-primary{
-    background:linear-gradient(180deg, var(--accent-2), var(--accent));
-    color:#fff; border:none; border-radius:var(--radius-el);
-    padding:14px; font-size:15px; font-weight:700; letter-spacing:0.3px;
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    box-shadow:0 4px 18px rgba(204,31,31,0.25);
+    background:var(--red);
+    color:#fff; border:none; border-radius:4px;
+    padding:18px; font-size:14px; font-weight:900; letter-spacing:2px; text-transform:uppercase;
+    margin-top:8px;
   }
-  .btn-primary:active{ transform:scale(0.98); }
+  .btn-primary:active{ background:var(--red2); }
   .login-error{
-    color:var(--accent-2); font-size:13px; text-align:center;
-    background:rgba(204,31,31,0.08); border:1px solid var(--border-accent);
-    border-radius:var(--radius-el); padding:10px; display:none;
+    color:var(--red2); font-size:11px; font-weight:700; text-align:center; text-transform:uppercase; letter-spacing:0.5px;
+    background:rgba(204,31,31,0.08); border:1px solid var(--border-red);
+    border-radius:4px; padding:10px; display:none;
   }
   .login-error.show{ display:block; }
-  .login-hint{ text-align:center; font-size:11px; color:var(--text-dim); margin-top:18px; line-height:1.6; }
+  .splash-date{ text-align:center; font-size:12px; color:var(--w4); margin-top:18px; text-transform:uppercase; letter-spacing:0.5px; }
 
-  /* ---------- App shell ---------- */
+  /* ================= APP SHELL ================= */
   #app{ display:none; flex-direction:column; min-height:100vh; padding-bottom:78px; }
   #app.active{ display:flex; }
 
-  .app-header{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 18px 14px;
-    border-bottom:1px solid var(--border);
-    background:var(--bg);
-    position:sticky; top:0; z-index:10;
-  }
-  .app-header .brand{ display:flex; align-items:center; gap:10px; }
-  .app-header .brand-mark{
-    width:36px; height:36px; border-radius:9px;
-    background:var(--surface-1); border:1px solid var(--border-accent);
-    display:flex; align-items:center; justify-content:center;
-    color:var(--accent); font-weight:900; font-size:18px;
-  }
-  .app-header .brand-text{ font-size:14px; font-weight:800; letter-spacing:2px; }
-  .app-header .brand-text span{ color:var(--accent); }
-  .app-header .meta{ text-align:right; }
-  .app-header .meta .date{ font-size:11px; color:var(--text-dim); text-transform:capitalize; }
-  .app-header .meta .coach{ font-size:12px; color:var(--text); font-weight:600; margin-top:2px; }
-
-  main.view{ display:none; flex:1; padding:16px 16px 24px; }
+  main.view{ display:none; flex:1; }
   main.view.active{ display:block; }
 
-  .section-title{
-    font-size:12px; font-weight:800; letter-spacing:1.5px; color:var(--text-dim);
-    text-transform:uppercase; margin:22px 0 10px;
-  }
-  .section-title:first-child{ margin-top:0; }
+  .page-pad{ padding:0 20px 24px; }
 
-  .stats-row{ display:flex; gap:12px; }
-  .stat-card{
-    flex:1; background:var(--surface-1); border:1px solid var(--border);
-    border-radius:var(--radius-card); padding:16px; text-align:center;
+  .page-title{
+    font-size:34px; font-weight:900; text-transform:uppercase; letter-spacing:-1px;
+    padding:22px 20px 18px;
   }
-  .stat-card .stat-value{ font-size:26px; font-weight:800; color:var(--accent-2); }
-  .stat-card .stat-label{ font-size:11px; color:var(--text-dim); margin-top:4px; letter-spacing:0.5px; }
+  .page-title .accent{ color:var(--red); }
 
-  .wod-card{
-    background:var(--surface-1); border:1px solid var(--border);
-    border-radius:var(--radius-card); padding:16px; margin-bottom:14px;
+  .section-row{
+    display:flex; align-items:baseline; justify-content:space-between;
+    padding:0 0 12px;
   }
-  .wod-card.warmup{ background:var(--surface-2); }
-  .wod-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
-  .wod-title{ font-size:14px; font-weight:800; letter-spacing:0.5px; }
-  .wod-badge{
-    font-size:10px; font-weight:800; color:var(--accent-2);
-    background:rgba(204,31,31,0.12); border:1px solid var(--border-accent);
-    border-radius:20px; padding:3px 10px; letter-spacing:0.5px; white-space:nowrap;
-  }
-  .wod-scheme{ font-size:11px; color:var(--text-dim); margin-bottom:12px; letter-spacing:0.3px; }
-  .wod-list{ list-style:none; display:flex; flex-direction:column; gap:8px; }
-  .wod-list li{
-    display:flex; align-items:center; gap:10px; font-size:14px; color:var(--text);
-    padding:8px 10px; background:rgba(255,255,255,0.02); border-radius:8px;
-  }
-  .wod-list li i{ color:var(--accent-2); font-size:16px; flex-shrink:0; }
-  .wod-note{ font-size:12px; color:var(--text-dim); font-style:italic; margin-top:10px; }
+  .section-heading{ font-size:20px; font-weight:900; text-transform:uppercase; letter-spacing:-0.5px; }
+  .section-link{ font-size:11px; font-weight:700; color:var(--red2); text-transform:uppercase; letter-spacing:0.5px; }
 
-  .btn-outline{
-    margin-top:14px; width:100%; background:transparent;
-    border:1px solid var(--border-accent); color:var(--accent-2);
-    border-radius:var(--radius-el); padding:11px; font-size:13px; font-weight:700;
-    display:flex; align-items:center; justify-content:center; gap:8px;
-  }
-  .btn-outline:active{ background:rgba(204,31,31,0.08); }
+  .eyebrow-label{ font-size:9px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--w4); }
 
-  .result-form{ margin-top:12px; display:none; gap:10px; flex-direction:column; }
+  .divider{ border-bottom:0.5px solid var(--border); }
+
+  /* ================= HOME / HERO ================= */
+  .hero{
+    position:relative; height:320px; background:var(--bg2);
+    border-top:2px solid var(--red);
+    overflow:hidden;
+    display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .hero-watermark{
+    position:absolute; top:50%; right:-30px; transform:translateY(-50%);
+    font-size:220px; font-weight:900; color:var(--red); opacity:0.06; line-height:1;
+    pointer-events:none; user-select:none;
+  }
+  .hero-topbar{
+    position:relative; z-index:1;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 20px;
+  }
+  .hero-logo{ font-size:16px; font-weight:900; letter-spacing:3px; text-transform:uppercase; }
+  .hero-avatar{
+    width:34px; height:34px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, var(--red2), var(--red));
+    display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px;
+  }
+  .hero-body{ position:relative; z-index:1; padding:0 20px 26px; }
+  .hero-eyebrow{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .hero-eyebrow .dot{ width:6px; height:6px; border-radius:50%; background:var(--red2); }
+  .hero-eyebrow span{ font-size:10px; font-weight:700; color:var(--red2); text-transform:uppercase; letter-spacing:1.5px; }
+  .hero-title{ font-size:36px; font-weight:900; letter-spacing:-1px; text-transform:uppercase; line-height:0.98; }
+  .hero-subtitle{ font-size:12px; color:var(--w3); margin-top:10px; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; }
+
+  .stats-strip{ display:flex; background:var(--bg1); }
+  .stats-strip .stat-col{
+    flex:1; text-align:center; padding:18px 8px;
+    border-right:0.5px solid var(--border);
+  }
+  .stats-strip .stat-col:last-child{ border-right:none; }
+  .stat-num{ font-size:28px; font-weight:900; }
+  .stat-label{ font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--w4); margin-top:4px; }
+
+  /* ================= WOD CARDS ================= */
+  .wod-block{ background:var(--bg1); border-radius:6px; overflow:hidden; margin-bottom:14px; }
+  .wod-block-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 16px 12px;
+  }
+  .wod-tag{ display:flex; align-items:center; gap:10px; }
+  .wod-tag .tag-rule{ width:20px; height:2px; background:var(--red); flex-shrink:0; }
+  .wod-tag .tag-name{ font-size:14px; font-weight:900; text-transform:uppercase; letter-spacing:0.3px; }
+  .wod-rounds{ font-size:11px; font-weight:900; color:var(--w3); text-transform:uppercase; letter-spacing:0.5px; }
+
+  .wod-warmup-list{ list-style:none; padding:0 16px 16px; display:flex; flex-direction:column; gap:10px; }
+  .wod-warmup-list li{ display:flex; align-items:center; gap:14px; }
+  .wod-warmup-list .ex-num{ font-size:28px; font-weight:900; color:var(--red); min-width:52px; }
+  .wod-warmup-list .ex-name{ font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+
+  .exercise-row{
+    display:flex; align-items:center; gap:14px;
+    padding:12px 16px; border-top:0.5px solid var(--border);
+  }
+  .exercise-row .ex-num{ font-size:30px; font-weight:900; color:var(--red); min-width:56px; flex-shrink:0; }
+  .exercise-row .ex-info{ display:flex; flex-direction:column; gap:2px; }
+  .exercise-row .ex-name{ font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+  .exercise-row .ex-note{ font-size:10px; color:var(--w4); text-transform:uppercase; letter-spacing:0.5px; font-weight:700; }
+
+  .wod-note-bar{
+    padding:10px 16px; font-size:10px; color:var(--w4); text-transform:uppercase;
+    letter-spacing:0.5px; font-weight:700; border-top:0.5px solid var(--border);
+  }
+
+  .log-bar{
+    margin:0 16px 16px; border:1px solid var(--red); background:rgba(204,31,31,0.06);
+    border-radius:4px; padding:13px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .log-bar span{ font-size:11px; font-weight:900; color:var(--red2); text-transform:uppercase; letter-spacing:1px; }
+  .log-bar i{ color:var(--red2); font-size:16px; }
+
+  .result-form{ margin:0 16px 16px; display:none; gap:8px; flex-direction:column; }
   .result-form.show{ display:flex; }
-  .result-form-row{ display:flex; gap:10px; }
+  .result-form-row{ display:flex; gap:8px; }
   .result-form input{
-    flex:1; background:var(--surface-2); border:1px solid var(--border);
-    border-radius:8px; padding:10px 12px; color:var(--text); font-size:14px; outline:none;
+    flex:1; background:var(--bg3); border:1px solid var(--border);
+    border-radius:4px; padding:12px; color:var(--white); font-size:13px; font-weight:700; outline:none;
   }
-  .result-form input:focus{ border-color:var(--border-accent); }
+  .result-form input:focus{ border-color:var(--border-red); }
   .result-form .save-btn{
-    background:var(--accent); color:#fff; border:none; border-radius:8px;
-    padding:10px 16px; font-size:13px; font-weight:700;
+    background:var(--red); color:#fff; border:none; border-radius:4px;
+    padding:13px; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:1px;
   }
   .saved-result{
-    margin-top:10px; font-size:12px; color:var(--accent-2);
-    background:rgba(204,31,31,0.08); border:1px solid var(--border-accent);
-    border-radius:8px; padding:8px 10px; display:flex; align-items:center; gap:6px;
+    margin:0 16px 16px; font-size:10px; font-weight:700; color:var(--red2); text-transform:uppercase; letter-spacing:0.5px;
+    background:rgba(204,31,31,0.08); border:1px solid var(--border-red);
+    border-radius:4px; padding:10px 12px;
   }
   .saved-result.hidden{ display:none; }
 
-  /* ---------- RMs ---------- */
-  .rm-category{ margin-bottom:6px; }
-  .rm-card{
-    background:var(--surface-1); border:1px solid var(--border);
-    border-radius:var(--radius-card); margin-bottom:10px; overflow:hidden;
+  /* ================= TABS (RMs / Timer) ================= */
+  .tabs-row{ display:flex; gap:0; padding:0 20px; margin-bottom:20px; overflow-x:auto; }
+  .tab-btn{
+    background:transparent; border:none; color:var(--w4);
+    font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px;
+    padding:0 0 12px; margin-right:26px; border-bottom:2px solid transparent; white-space:nowrap; flex-shrink:0;
   }
-  .rm-card-head{
+  .tab-btn.active{ color:var(--white); border-bottom-color:var(--red); }
+
+  /* ================= RMs ================= */
+  .rm-item{ background:var(--bg1); border-radius:6px; margin-bottom:10px; overflow:hidden; }
+  .rm-item-head{
     display:flex; align-items:center; justify-content:space-between;
-    padding:14px 16px; gap:10px;
+    padding:16px; gap:10px;
   }
-  .rm-card-head .rm-name{ font-size:14px; font-weight:700; }
-  .rm-card-head .rm-value{ font-size:15px; font-weight:800; color:var(--accent-2); display:flex; align-items:center; gap:8px; }
-  .rm-card-head i.chev{ color:var(--text-dim); transition:transform 0.2s; font-size:14px; }
-  .rm-card.expanded .chev{ transform:rotate(180deg); }
-  .rm-percents{
-    max-height:0; overflow:hidden; transition:max-height 0.25s ease;
-    border-top:1px solid var(--border);
+  .rm-item-head .rm-name{ font-size:15px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+  .rm-item-head .rm-right{ display:flex; align-items:center; gap:12px; }
+  .rm-item-head .rm-value{ font-size:26px; font-weight:900; }
+  .rm-item-head i.chev{ color:var(--w4); font-size:14px; transition:transform 0.2s; }
+  .rm-item.expanded .chev{ transform:rotate(180deg); }
+
+  .rm-expanded-head{
+    display:flex; align-items:center; gap:10px; padding:0 16px 14px;
   }
-  .rm-card.expanded .rm-percents{ max-height:200px; }
-  .rm-percents-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:0; padding:12px 10px; }
+  .rm-pill{
+    font-size:9px; font-weight:900; color:#fff; background:var(--red);
+    border-radius:20px; padding:3px 9px; letter-spacing:1px; text-transform:uppercase;
+  }
+
+  .rm-percents{ max-height:0; overflow:hidden; transition:max-height 0.25s ease; border-top:0.5px solid var(--border); }
+  .rm-item.expanded .rm-percents{ max-height:220px; }
+  .rm-percents-grid{ display:grid; grid-template-columns:repeat(5,1fr); padding:14px 10px; }
   .rm-percent-item{ text-align:center; padding:4px 2px; }
-  .rm-percent-item .pct{ font-size:10px; color:var(--text-dim); }
-  .rm-percent-item .val{ font-size:13px; font-weight:700; color:var(--text); margin-top:3px; }
+  .rm-percent-item .pct{ font-size:9px; font-weight:700; color:var(--w4); text-transform:uppercase; letter-spacing:0.5px; }
+  .rm-percent-item .val{ font-size:14px; font-weight:900; color:var(--white); margin-top:5px; }
 
-  /* ---------- Timer ---------- */
-  .timer-modes{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px; }
-  .mode-btn{
-    background:var(--surface-1); border:1px solid var(--border); color:var(--text-dim);
-    border-radius:20px; padding:8px 14px; font-size:12px; font-weight:700;
+  .btn-outline{
+    width:100%; background:var(--bg2);
+    border:0.5px solid var(--border); color:var(--white);
+    border-radius:4px; padding:16px; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:1.5px;
   }
-  .mode-btn.active{ background:rgba(204,31,31,0.14); border-color:var(--border-accent); color:var(--accent-2); }
+  .btn-outline:active{ background:var(--bg3); }
+  .btn-outline.red-outline{ background:transparent; border:1px solid var(--red); color:var(--red2); }
 
-  .timer-config{
-    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
-    padding:14px; margin-bottom:16px; font-size:12px; color:var(--text-dim);
-  }
-  .timer-config-row{ display:flex; align-items:center; justify-content:space-between; padding:6px 0; }
-  .timer-config-row input{
-    width:70px; text-align:center; background:var(--surface-2); border:1px solid var(--border);
-    border-radius:8px; padding:6px; color:var(--text); font-size:14px; outline:none;
-  }
-
-  .timer-display-wrap{
-    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
-    padding:36px 16px; text-align:center; margin-bottom:18px; transition:background 0.2s, border-color 0.2s;
-  }
-  .timer-display-wrap.danger{ background:rgba(204,31,31,0.10); border-color:var(--border-accent); }
-  .timer-round-label{ font-size:12px; letter-spacing:1px; color:var(--text-dim); text-transform:uppercase; margin-bottom:10px; min-height:16px; }
-  .timer-round-label.danger{ color:var(--accent-2); font-weight:800; }
+  /* ================= TIMER ================= */
+  .timer-mode-label{ font-size:9px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--w4); text-align:center; margin-bottom:8px; }
+  .timer-display-wrap{ text-align:center; padding:20px 20px 30px; }
   .timer-display{
-    font-size:68px; font-weight:800; font-variant-numeric:tabular-nums; font-feature-settings:"tnum";
-    color:var(--text); line-height:1; letter-spacing:1px;
+    font-size:88px; font-weight:900; letter-spacing:-5px; font-variant-numeric:tabular-nums;
+    font-feature-settings:"tnum"; color:var(--white); line-height:1;
   }
-  .timer-display.danger{ color:var(--accent-2); }
-  .timer-sub{ font-size:13px; color:var(--text-dim); margin-top:12px; min-height:18px; }
-  .timer-sub.finished{ color:var(--accent-2); font-weight:800; letter-spacing:1px; }
+  .timer-display.danger{ color:var(--red); }
+  .timer-status{ font-size:11px; font-weight:700; color:var(--w4); text-transform:uppercase; letter-spacing:1px; margin-top:10px; min-height:16px; }
+  .timer-status.finished{ color:var(--red2); font-weight:900; }
 
-  .timer-controls{ display:flex; gap:10px; }
-  .timer-btn{
-    flex:1; border-radius:var(--radius-el); padding:14px; font-size:14px; font-weight:800;
-    border:1px solid var(--border);
-    display:flex; align-items:center; justify-content:center; gap:8px;
+  .timer-info-card{
+    margin:0 20px 20px; border-left:2px solid var(--red); background:var(--bg1);
+    padding:14px 16px; border-radius:0 6px 6px 0;
   }
-  .timer-btn.start{ background:linear-gradient(180deg, var(--accent-2), var(--accent)); color:#fff; border:none; }
-  .timer-btn.pause{ background:var(--surface-2); color:var(--text); }
-  .timer-btn.reset{ background:transparent; color:var(--text-dim); }
+  .timer-info-card .ti-title{ font-size:9px; font-weight:900; color:var(--red2); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px; }
+  .timer-info-card .ti-content{ font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; color:var(--w2); }
 
-  /* ---------- Atletas ---------- */
-  .attendance-bar-wrap{
-    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
-    padding:14px 16px; margin-bottom:16px;
+  .timer-controls{ display:flex; gap:10px; padding:0 20px; }
+  .timer-btn-start{
+    flex:2; background:var(--red); color:#fff; border:none; border-radius:4px;
+    padding:18px; font-size:13px; font-weight:900; letter-spacing:2px; text-transform:uppercase;
   }
-  .attendance-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-  .attendance-top .label{ font-size:12px; color:var(--text-dim); letter-spacing:0.5px; }
-  .attendance-top .count{ font-size:14px; font-weight:800; color:var(--accent-2); }
-  .progress-track{ height:8px; background:var(--surface-2); border-radius:20px; overflow:hidden; }
-  .progress-fill{ height:100%; background:linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius:20px; }
+  .timer-btn-start.pause-state{ background:var(--bg2); color:var(--white); border:0.5px solid var(--border); }
+  .timer-btn-reset{
+    flex:1; background:var(--bg2); border:0.5px solid var(--border); color:var(--w3);
+    border-radius:4px; padding:18px 20px; font-size:13px; font-weight:900; letter-spacing:1px; text-transform:uppercase;
+  }
+  .timer-config-note{ text-align:center; font-size:10px; color:var(--w4); text-transform:uppercase; letter-spacing:0.5px; font-weight:700; padding:16px 20px 0; }
 
-  .athletes-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  /* ================= ATLETAS ================= */
+  .attendance-bar-wrap{ padding:0 20px 20px; }
+  .attendance-top{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; }
+  .attendance-top .label{ font-size:9px; font-weight:700; color:var(--w4); text-transform:uppercase; letter-spacing:2px; }
+  .attendance-top .count{ font-size:18px; font-weight:900; }
+  .progress-track{ height:3px; background:var(--bg3); border-radius:0; overflow:hidden; }
+  .progress-fill{ height:100%; background:var(--red); border-radius:0; }
+
+  .athletes-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 20px 24px; }
+  .coach-card{
+    margin:0 20px 16px; border-left:2px solid var(--red); background:var(--bg1);
+    border-radius:0 6px 6px 0; padding:16px; display:flex; align-items:center; gap:14px;
+  }
   .athlete-card{
-    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
-    padding:14px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px;
-    position:relative;
+    background:var(--bg1); border-radius:6px; padding:16px;
+    display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px;
   }
-  .athlete-card.coach{ border-color:var(--border-accent); background:var(--surface-2); grid-column:1 / -1; flex-direction:row; text-align:left; justify-content:flex-start; }
   .avatar{
-    width:52px; height:52px; border-radius:50%; background:radial-gradient(circle at 30% 30%, var(--accent-2), var(--accent));
-    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:17px;
+    width:48px; height:48px; border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, var(--red2), var(--red));
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:15px;
     flex-shrink:0; position:relative;
   }
+  .coach-card .avatar{ width:52px; height:52px; font-size:17px; }
   .presence-dot{
-    position:absolute; bottom:2px; right:2px; width:12px; height:12px; border-radius:50%;
-    border:2px solid var(--surface-1); background:#555;
+    position:absolute; bottom:1px; right:1px; width:11px; height:11px; border-radius:50%;
+    border:2px solid var(--bg1); background:var(--w4);
   }
-  .presence-dot.active{ background:#3ecf5e; }
-  .athlete-card.coach .presence-dot{ border-color:var(--surface-2); }
-  .athlete-name{ font-size:13px; font-weight:700; }
-  .athlete-role{ font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.5px; }
-  .athlete-card.coach .athlete-name{ color:var(--accent-2); }
+  .presence-dot.active{ background:var(--green); }
+  .athlete-name{ font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
+  .coach-info .athlete-name{ font-size:16px; font-weight:900; }
+  .coach-role{ font-size:10px; font-weight:900; color:var(--red2); text-transform:uppercase; letter-spacing:1.5px; margin-top:3px; }
 
-  /* ---------- Stats / Benchmarks ---------- */
-  .percentile-card{
-    background:var(--surface-1); border:1px solid var(--border-accent); border-radius:var(--radius-card);
-    padding:18px; margin-bottom:18px; text-align:center;
+  /* ================= STATS / BENCHMARKS ================= */
+  .benchmark-row{
+    display:flex; align-items:center; gap:14px;
+    padding:16px 20px; border-bottom:0.5px solid var(--border);
   }
-  .percentile-card .percentile-value{ font-size:28px; font-weight:800; color:var(--accent-2); margin-bottom:10px; }
-  .percentile-card .progress-track{ margin-bottom:6px; }
-  .percentile-card .percentile-note{ font-size:11px; color:var(--text-dim); }
+  .benchmark-row .bm-num{ font-size:11px; font-weight:900; color:var(--w4); min-width:20px; }
+  .benchmark-row .bm-info{ flex:1; }
+  .benchmark-row .bm-name-row{ display:flex; align-items:center; gap:8px; }
+  .bm-name{ font-size:20px; font-weight:900; text-transform:uppercase; letter-spacing:-0.5px; }
+  .bm-pr{ font-size:9px; font-weight:900; color:var(--red2); text-transform:uppercase; letter-spacing:1px; }
+  .bm-desc{ font-size:11px; color:var(--w3); margin-top:3px; }
+  .bm-value{ font-size:22px; font-weight:900; text-align:right; flex-shrink:0; }
 
-  .benchmark-card{
-    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-card);
-    padding:14px 16px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between;
-  }
-  .benchmark-name{ font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; }
-  .pr-badge{
-    font-size:9px; font-weight:800; color:#080808; background:var(--accent-2);
-    border-radius:6px; padding:2px 6px; letter-spacing:0.5px;
-  }
-  .benchmark-value{ font-size:15px; font-weight:800; color:var(--text); }
+  .percentile-section{ padding:26px 20px; text-align:center; border-top:0.5px solid var(--border); margin-top:6px; }
+  .percentile-label{ font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--w4); margin-bottom:10px; }
+  .percentile-number{ font-size:64px; font-weight:900; letter-spacing:-3px; line-height:1; }
+  .percentile-number .top-word{ color:var(--red); }
+  .percentile-number .pct-word{ color:var(--white); }
+  .percentile-sub{ font-size:12px; color:var(--w3); margin:12px 0 16px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; }
 
-  /* ---------- Bottom nav ---------- */
+  /* ================= BOTTOM NAV ================= */
   .bottom-nav{
     position:fixed; bottom:0; left:0; right:0; z-index:20;
-    display:flex; background:var(--surface-1); border-top:1px solid var(--border);
-    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    display:flex; background:var(--bg0); border-top:0.5px solid var(--border);
+    padding:8px 4px calc(8px + env(safe-area-inset-bottom));
   }
   .nav-item{
-    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
-    background:transparent; border:none; color:var(--text-dim); padding:8px 2px; border-radius:10px;
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:5px;
+    background:transparent; border:none; color:var(--w4); padding:8px 2px;
   }
-  .nav-item i{ font-size:21px; }
-  .nav-item span{ font-size:10px; font-weight:600; }
-  .nav-item.active{ color:var(--accent-2); }
+  .nav-item i{ font-size:20px; }
+  .nav-item span{ font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+  .nav-item.active{ color:var(--red2); }
 
   ::-webkit-scrollbar{ width:0; height:0; }
 </style>
@@ -319,168 +362,182 @@
 
 <!-- ================= SPLASH / LOGIN ================= -->
 <div id="splash-screen">
-  <div class="splash-logo-wrap">
-    <svg class="splash-rings" viewBox="0 0 180 180" width="180" height="180">
-      <circle cx="90" cy="90" r="88" fill="none" stroke="#CC1F1F" stroke-opacity="0.06" stroke-width="1.5"/>
-      <circle cx="90" cy="90" r="72" fill="none" stroke="#CC1F1F" stroke-opacity="0.10" stroke-width="1.5"/>
-      <circle cx="90" cy="90" r="56" fill="#101010" stroke="#CC1F1F" stroke-opacity="0.28" stroke-width="1.5"/>
-      <text x="90" y="118" font-family="Arial, sans-serif" font-weight="900" font-size="80" fill="#CC1F1F" text-anchor="middle">R</text>
-    </svg>
-  </div>
-  <div class="splash-brand">
-    <div class="agnar"><span class="r-letter">R</span>AGNAR</div>
-    <div class="box">BOX</div>
-  </div>
-  <div class="splash-date" id="splash-date">--</div>
-  <div class="splash-tagline">Compite. Levanta. Domina.</div>
+  <div class="splash-watermark">R</div>
+  <svg class="splash-rings" width="320" height="320" viewBox="0 0 320 320">
+    <circle cx="160" cy="160" r="155" fill="none" stroke="#CC1F1F" stroke-opacity="0.08" stroke-width="1.5"/>
+    <circle cx="160" cy="160" r="120" fill="none" stroke="#CC1F1F" stroke-opacity="0.12" stroke-width="1.5"/>
+    <circle cx="160" cy="160" r="85" fill="none" stroke="#CC1F1F" stroke-opacity="0.15" stroke-width="1.5"/>
+  </svg>
 
-  <form class="login-form" id="login-form" autocomplete="off">
-    <div class="input-group">
-      <i class="ti ti-mail"></i>
-      <input type="email" id="login-email" placeholder="Correo electrónico" autocomplete="username" required>
-    </div>
-    <div class="input-group">
-      <i class="ti ti-lock"></i>
-      <input type="password" id="login-password" placeholder="Contraseña" autocomplete="current-password" required>
-    </div>
-    <div class="login-error" id="login-error">Credenciales incorrectas. Verifica tu correo y contraseña.</div>
-    <button type="submit" class="btn-primary"><i class="ti ti-door-enter"></i> Entrar al Box</button>
-  </form>
-  <div class="login-hint">Acceso exclusivo para atletas registrados de Ragnar Box</div>
+  <div class="splash-content">
+    <div class="splash-wordmark">RAGNAR</div>
+    <div class="splash-sub">BOX</div>
+    <hr class="splash-rule">
+    <div class="splash-tagline">COMPITE. LEVANTA. DOMINA.</div>
+
+    <form class="login-form" id="login-form" autocomplete="off">
+      <div class="input-group">
+        <i class="ti ti-mail"></i>
+        <input type="email" id="login-email" placeholder="Correo electrónico" autocomplete="username" required>
+      </div>
+      <div class="input-group">
+        <i class="ti ti-lock"></i>
+        <input type="password" id="login-password" placeholder="Contraseña" autocomplete="current-password" required>
+      </div>
+      <div class="login-error" id="login-error">Credenciales incorrectas. Verifica tu correo y contraseña.</div>
+      <button type="submit" class="btn-primary">ENTRAR AL BOX</button>
+    </form>
+    <div class="splash-date" id="splash-date">--</div>
+  </div>
 </div>
 
 <!-- ================= APP ================= -->
 <div id="app">
 
-  <header class="app-header">
-    <div class="brand">
-      <div class="brand-mark">R</div>
-      <div class="brand-text">RAGNAR <span>BOX</span></div>
-    </div>
-    <div class="meta">
-      <div class="date" id="header-date">--</div>
-      <div class="coach">Coach: Claudia</div>
-    </div>
-  </header>
-
   <!-- ---- HOME ---- -->
   <main class="view active" id="view-home">
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-value" id="stat-streak">12</div>
-        <div class="stat-label">RACHA DÍAS</div>
+    <div class="hero">
+      <div class="hero-watermark">R</div>
+      <div class="hero-topbar">
+        <div class="hero-logo">RAGNAR</div>
+        <div class="hero-avatar">A</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-value" id="stat-prs">3</div>
-        <div class="stat-label">PRs ESTE MES</div>
+      <div class="hero-body">
+        <div class="hero-eyebrow"><span class="dot"></span><span>HOY · COACH CLAUDIA</span></div>
+        <div class="hero-title">WOD<br>DEL DÍA</div>
+        <div class="hero-subtitle" id="hero-date">--</div>
       </div>
     </div>
 
-    <div class="section-title">Calentamiento</div>
-    <div class="wod-card warmup">
-      <div class="wod-header">
-        <div class="wod-title">Movilidad general</div>
-        <div class="wod-badge">4 RONDAS</div>
+    <div class="stats-strip">
+      <div class="stat-col">
+        <div class="stat-num" id="stat-streak">12</div>
+        <div class="stat-label">RACHA</div>
       </div>
-      <ul class="wod-list">
-        <li><i class="ti ti-yoga"></i> 20 Hip 90/90</li>
-        <li><i class="ti ti-yoga"></i> 20 Ángeles prono</li>
-        <li><i class="ti ti-yoga"></i> 20 Escorpiones</li>
-        <li><i class="ti ti-yoga"></i> 20 Manguito rotador</li>
-      </ul>
+      <div class="stat-col">
+        <div class="stat-num" id="stat-prs">3</div>
+        <div class="stat-label">PRs MES</div>
+      </div>
+      <div class="stat-col">
+        <div class="stat-num">RX</div>
+        <div class="stat-label">NIVEL</div>
+      </div>
     </div>
 
-    <div class="section-title">WOD 1</div>
-    <div class="wod-card" data-wod-id="wod1">
-      <div class="wod-header">
-        <div class="wod-title">Cada 5 minutos</div>
-        <div class="wod-badge">5 RONDAS</div>
+    <div class="page-pad" style="padding-top:22px;">
+      <div class="section-row">
+        <div class="section-heading">HOY</div>
+        <div class="section-link">Ver todo</div>
       </div>
-      <div class="wod-scheme">EMOM 5' x 5 rondas</div>
-      <ul class="wod-list">
-        <li><i class="ti ti-run"></i> 200m Run</li>
-        <li><i class="ti ti-arrows-vertical"></i> 20 Pull-Ups</li>
-        <li><i class="ti ti-arrows-up"></i> 20 Toes-to-Bar</li>
-        <li><i class="ti ti-arrow-bar-down"></i> 15 Push-Ups</li>
-      </ul>
-      <div class="wod-note">1 minuto de descanso entre cada ronda</div>
-      <button class="btn-outline" data-toggle-form="wod1"><i class="ti ti-clipboard-check"></i> Registrar resultado</button>
-      <div class="result-form" id="form-wod1">
-        <div class="result-form-row">
-          <input type="number" min="0" max="5" placeholder="Rondas completadas" id="wod1-rounds">
-          <input type="number" min="0" placeholder="Reps extra" id="wod1-reps">
+
+      <div class="wod-block">
+        <div class="wod-block-head">
+          <div class="wod-tag"><span class="tag-rule"></span><span class="tag-name">Calentamiento</span></div>
+          <div class="wod-rounds">4 RONDAS</div>
         </div>
-        <button class="save-btn" data-save="wod1">Guardar resultado</button>
+        <ul class="wod-warmup-list">
+          <li><span class="ex-num">20</span><span class="ex-name">Hip 90/90</span></li>
+          <li><span class="ex-num">20</span><span class="ex-name">Ángeles prono</span></li>
+          <li><span class="ex-num">20</span><span class="ex-name">Escorpiones</span></li>
+          <li><span class="ex-num">20</span><span class="ex-name">Manguito rotador</span></li>
+        </ul>
       </div>
-      <div class="saved-result hidden" id="saved-wod1"></div>
-    </div>
 
-    <div class="section-title">WOD 2</div>
-    <div class="wod-card" data-wod-id="wod2">
-      <div class="wod-header">
-        <div class="wod-title">Cada 2 minutos</div>
-        <div class="wod-badge">5 RONDAS</div>
-      </div>
-      <div class="wod-scheme">EMOM 2' x 5 rondas</div>
-      <ul class="wod-list">
-        <li><i class="ti ti-run"></i> 400m Run</li>
-        <li><i class="ti ti-bolt"></i> MC Burpees</li>
-      </ul>
-      <button class="btn-outline" data-toggle-form="wod2"><i class="ti ti-clipboard-check"></i> Registrar resultado</button>
-      <div class="result-form" id="form-wod2">
-        <div class="result-form-row">
-          <input type="number" min="0" max="5" placeholder="Rondas completadas" id="wod2-rounds">
-          <input type="number" min="0" placeholder="Reps extra" id="wod2-reps">
+      <div class="wod-block" data-wod-id="wod1">
+        <div class="wod-block-head">
+          <div class="wod-tag"><span class="tag-rule"></span><span class="tag-name">WOD 1 · Cada 5 min</span></div>
+          <div class="wod-rounds">5 RONDAS</div>
         </div>
-        <button class="save-btn" data-save="wod2">Guardar resultado</button>
+        <div class="exercise-row"><span class="ex-num">200M</span><div class="ex-info"><span class="ex-name">Run</span></div></div>
+        <div class="exercise-row"><span class="ex-num">20</span><div class="ex-info"><span class="ex-name">Pull-Ups</span></div></div>
+        <div class="exercise-row"><span class="ex-num">20</span><div class="ex-info"><span class="ex-name">Toes-to-Bar</span></div></div>
+        <div class="exercise-row"><span class="ex-num">15</span><div class="ex-info"><span class="ex-name">Push-Ups</span></div></div>
+        <div class="wod-note-bar">1 MIN DESCANSO ENTRE RONDAS</div>
+        <button class="log-bar" data-toggle-form="wod1"><span>REGISTRAR RESULTADO</span><i class="ti ti-plus"></i></button>
+        <div class="result-form" id="form-wod1">
+          <div class="result-form-row">
+            <input type="number" min="0" max="5" placeholder="Rondas" id="wod1-rounds">
+            <input type="number" min="0" placeholder="Reps extra" id="wod1-reps">
+          </div>
+          <button class="save-btn" data-save="wod1">GUARDAR RESULTADO</button>
+        </div>
+        <div class="saved-result hidden" id="saved-wod1"></div>
       </div>
-      <div class="saved-result hidden" id="saved-wod2"></div>
+
+      <div class="wod-block" data-wod-id="wod2">
+        <div class="wod-block-head">
+          <div class="wod-tag"><span class="tag-rule"></span><span class="tag-name">WOD 2 · Cada 2 min</span></div>
+          <div class="wod-rounds">5 RONDAS</div>
+        </div>
+        <div class="exercise-row"><span class="ex-num">400M</span><div class="ex-info"><span class="ex-name">Run</span></div></div>
+        <div class="exercise-row"><span class="ex-num">MC</span><div class="ex-info"><span class="ex-name">Burpees</span></div></div>
+        <button class="log-bar" data-toggle-form="wod2"><span>REGISTRAR RESULTADO</span><i class="ti ti-plus"></i></button>
+        <div class="result-form" id="form-wod2">
+          <div class="result-form-row">
+            <input type="number" min="0" max="5" placeholder="Rondas" id="wod2-rounds">
+            <input type="number" min="0" placeholder="Reps extra" id="wod2-reps">
+          </div>
+          <button class="save-btn" data-save="wod2">GUARDAR RESULTADO</button>
+        </div>
+        <div class="saved-result hidden" id="saved-wod2"></div>
+      </div>
     </div>
   </main>
 
   <!-- ---- RMs ---- -->
   <main class="view" id="view-rms">
-    <div class="section-title">Olímpicos</div>
-    <div id="rm-cat-olimpicos"></div>
-
-    <div class="section-title">Fuerza</div>
-    <div id="rm-cat-fuerza"></div>
-
-    <div class="section-title">Gimnasia</div>
-    <div id="rm-cat-gimnasia"></div>
-
-    <button class="btn-outline" id="add-rm-btn"><i class="ti ti-plus"></i> Agregar RM</button>
+    <div class="page-title">MIS <span class="accent">RM</span>S</div>
+    <div class="tabs-row" id="rm-tabs">
+      <button class="tab-btn active" data-cat="olimpicos">OLÍMPICO</button>
+      <button class="tab-btn" data-cat="fuerza">FUERZA</button>
+      <button class="tab-btn" data-cat="gimnasia">GIMNASIA</button>
+    </div>
+    <div class="page-pad">
+      <div id="rm-cat-olimpicos" class="rm-cat-panel"></div>
+      <div id="rm-cat-fuerza" class="rm-cat-panel hidden"></div>
+      <div id="rm-cat-gimnasia" class="rm-cat-panel hidden"></div>
+      <button class="btn-outline" id="add-rm-btn">+ AGREGAR RM</button>
+    </div>
   </main>
 
   <!-- ---- TIMER ---- -->
   <main class="view" id="view-timer">
-    <div class="section-title">Modo</div>
-    <div class="timer-modes" id="timer-modes">
-      <button class="mode-btn active" data-mode="cada5">Cada 5 min</button>
-      <button class="mode-btn" data-mode="cada2">Cada 2 min</button>
-      <button class="mode-btn" data-mode="amrap">AMRAP</button>
-      <button class="mode-btn" data-mode="fortime">For Time</button>
-      <button class="mode-btn" data-mode="emom">EMOM</button>
-      <button class="mode-btn" data-mode="tabata">Tabata</button>
+    <div class="page-title">TIMER</div>
+    <div class="tabs-row" id="timer-modes">
+      <button class="tab-btn active" data-mode="cada5">5 MIN</button>
+      <button class="tab-btn" data-mode="cada2">2 MIN</button>
+      <button class="tab-btn" data-mode="amrap">AMRAP</button>
+      <button class="tab-btn" data-mode="emom">EMOM</button>
     </div>
 
-    <div class="timer-config" id="timer-config"></div>
-
-    <div class="timer-display-wrap" id="timer-display-wrap">
-      <div class="timer-round-label" id="timer-round-label">&nbsp;</div>
+    <div class="timer-mode-label" id="timer-round-label">RONDA 1 / 5</div>
+    <div class="timer-display-wrap">
       <div class="timer-display" id="timer-display">05:00</div>
-      <div class="timer-sub" id="timer-sub">Cada 5 minutos · 5 rondas · WOD del día</div>
+      <div class="timer-status" id="timer-sub">CADA 5 MINUTOS · 5 RONDAS</div>
+    </div>
+
+    <div class="timer-info-card" id="timer-info-card">
+      <div class="ti-title">WOD ACTIVO</div>
+      <div class="ti-content" id="timer-info-content">200M RUN · 20 PULL-UPS · 20 T2B · 15 PUSH-UPS</div>
     </div>
 
     <div class="timer-controls">
-      <button class="timer-btn start" id="timer-start"><i class="ti ti-player-play"></i> Iniciar</button>
-      <button class="timer-btn pause" id="timer-pause"><i class="ti ti-player-pause"></i> Pausar</button>
-      <button class="timer-btn reset" id="timer-reset"><i class="ti ti-refresh"></i> Reset</button>
+      <button class="timer-btn-start" id="timer-start">INICIAR</button>
+      <button class="timer-btn-reset" id="timer-reset">RESET</button>
     </div>
+    <div class="timer-config-note" id="timer-config-note">5 MIN = 25 MIN TOTAL (WOD 1)</div>
   </main>
 
   <!-- ---- ATLETAS ---- -->
   <main class="view" id="view-atletas">
+    <div class="page-title">EQUIPO</div>
+    <div class="coach-card">
+      <div class="avatar">CL<span class="presence-dot active"></span></div>
+      <div class="coach-info">
+        <div class="athlete-name">Claudia</div>
+        <div class="coach-role">HEAD COACH</div>
+      </div>
+    </div>
     <div class="attendance-bar-wrap">
       <div class="attendance-top">
         <span class="label">ASISTENCIA DE HOY</span>
@@ -491,18 +548,22 @@
     <div class="athletes-grid" id="athletes-grid"></div>
   </main>
 
-  <!-- ---- STATS ---- -->
+  <!-- ---- STATS / BENCHMARKS ---- -->
   <main class="view" id="view-stats">
-    <div class="percentile-card">
-      <div class="percentile-value">Top 22%</div>
-      <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
-      <div class="percentile-note">Ranking global entre atletas Ragnar Box</div>
-    </div>
-
-    <div class="section-title">Benchmarks</div>
+    <div class="page-title">BENCHMARKS</div>
     <div id="benchmarks-list"></div>
 
-    <button class="btn-outline" id="add-benchmark-btn"><i class="ti ti-plus"></i> Actualizar benchmark</button>
+    <div class="percentile-section">
+      <div class="percentile-label">TU PERCENTIL</div>
+      <div class="percentile-number"><span class="top-word">TOP</span> <span class="pct-word">22%</span></div>
+      <div class="percentile-sub">RANKING GLOBAL ENTRE ATLETAS RAGNAR BOX</div>
+      <div class="progress-track"><div class="progress-fill" style="width:78%"></div></div>
+    </div>
+
+    <div class="page-pad" style="padding-top:20px; display:flex; flex-direction:column; gap:10px;">
+      <button class="btn-outline" id="add-benchmark-btn">+ ACTUALIZAR BENCHMARK</button>
+      <button class="btn-outline red-outline" id="analyze-ai-btn">ANALIZAR CON IA ↗</button>
+    </div>
   </main>
 
   <nav class="bottom-nav">
@@ -533,8 +594,8 @@
   }
 
   var now = new Date();
-  document.getElementById('splash-date').textContent = formatLongDate(now);
-  document.getElementById('header-date').textContent = formatShortDate(now);
+  document.getElementById('splash-date').textContent = formatLongDate(now).toUpperCase();
+  document.getElementById('hero-date').textContent = formatLongDate(now).toUpperCase();
 
   /* ---------------- LOGIN ---------------- */
   var loginForm = document.getElementById('login-form');
@@ -589,7 +650,7 @@
     var el = document.getElementById('saved-' + wodId);
     if(results[wodId]){
       var r = results[wodId];
-      el.textContent = '✓ Registrado: ' + r.rounds + ' rondas · ' + r.reps + ' reps extra (' + r.date + ')';
+      el.textContent = 'REGISTRADO: ' + r.rounds + ' RONDAS · ' + r.reps + ' REPS EXTRA (' + r.date.toUpperCase() + ')';
       el.classList.remove('hidden');
     } else {
       el.classList.add('hidden');
@@ -644,28 +705,29 @@
   }
   function saveRms(list){ localStorage.setItem(RMS_KEY, JSON.stringify(list)); }
 
-  var CATEGORY_LABELS = { olimpicos:'olimpicos', fuerza:'fuerza', gimnasia:'gimnasia' };
-
   function renderRms(){
     var rms = getRms();
     ['olimpicos','fuerza','gimnasia'].forEach(function(cat){
       var container = document.getElementById('rm-cat-' + cat);
       container.innerHTML = '';
-      rms.filter(function(r){ return r.category === cat; }).forEach(function(rm, idx){
+      rms.filter(function(r){ return r.category === cat; }).forEach(function(rm){
         var card = document.createElement('div');
-        card.className = 'rm-card';
+        card.className = 'rm-item';
         var percentsHtml = PERCENTS.map(function(p){
           var val = (rm.value * p / 100);
           val = rm.unit === 'reps' ? Math.round(val) : Math.round(val * 10) / 10;
-          return '<div class="rm-percent-item"><div class="pct">' + p + '%</div><div class="val">' + val + (rm.unit === 'kg' ? 'kg' : '') + '</div></div>';
+          return '<div class="rm-percent-item"><div class="pct">' + p + '%</div><div class="val">' + val + (rm.unit === 'kg' ? 'KG' : '') + '</div></div>';
         }).join('');
         card.innerHTML =
-          '<div class="rm-card-head">' +
+          '<div class="rm-item-head">' +
             '<div class="rm-name">' + rm.name + '</div>' +
-            '<div class="rm-value">' + rm.value + (rm.unit === 'kg' ? 'kg' : ' reps') + ' <i class="ti ti-chevron-down chev"></i></div>' +
+            '<div class="rm-right"><div class="rm-value">' + rm.value + (rm.unit === 'kg' ? 'KG' : '') + '</div><i class="ti ti-chevron-down chev"></i></div>' +
           '</div>' +
-          '<div class="rm-percents"><div class="rm-percents-grid">' + percentsHtml + '</div></div>';
-        card.querySelector('.rm-card-head').addEventListener('click', function(){
+          '<div class="rm-percents">' +
+            '<div class="rm-expanded-head"><span class="rm-pill">1RM</span></div>' +
+            '<div class="rm-percents-grid">' + percentsHtml + '</div>' +
+          '</div>';
+        card.querySelector('.rm-item-head').addEventListener('click', function(){
           card.classList.toggle('expanded');
         });
         container.appendChild(card);
@@ -673,6 +735,15 @@
     });
   }
   renderRms();
+
+  document.querySelectorAll('#rm-tabs .tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#rm-tabs .tab-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.rm-cat-panel').forEach(function(p){ p.classList.add('hidden'); });
+      document.getElementById('rm-cat-' + btn.dataset.cat).classList.remove('hidden');
+    });
+  });
 
   document.getElementById('add-rm-btn').addEventListener('click', function(){
     var name = prompt('Nombre del RM (ej: Clean, Snatch, Toes-to-Bar):');
@@ -693,25 +764,25 @@
 
   /* ---------------- TIMER ---------------- */
   var timerDisplay = document.getElementById('timer-display');
-  var timerDisplayWrap = document.getElementById('timer-display-wrap');
   var timerRoundLabel = document.getElementById('timer-round-label');
   var timerSub = document.getElementById('timer-sub');
-  var timerConfig = document.getElementById('timer-config');
+  var timerStartBtn = document.getElementById('timer-start');
+  var timerInfoContent = document.getElementById('timer-info-content');
+  var timerConfigNote = document.getElementById('timer-config-note');
 
   var MODES = {
-    cada5: { label:'Cada 5 minutos', interval:300, rounds:5, sub:'Cada 5 minutos · 5 rondas · WOD del día', type:'interval' },
-    cada2: { label:'Cada 2 minutos', interval:120, rounds:5, sub:'Cada 2 minutos · 5 rondas · WOD del día', type:'interval' },
-    amrap: { label:'AMRAP', duration:1200, sub:'Tantas rondas como sea posible', type:'countdown' },
-    fortime: { label:'For Time', cap:1200, sub:'Cronómetro ascendente · registra tu tiempo', type:'countup' },
-    emom: { label:'EMOM', interval:60, rounds:10, sub:'Cada minuto en punto', type:'interval' },
-    tabata: { label:'Tabata', work:20, rest:10, rounds:8, sub:'20s trabajo / 10s descanso · 8 rondas', type:'tabata' }
+    cada5: { label:'CADA 5 MINUTOS', interval:300, rounds:5, sub:'CADA 5 MINUTOS · 5 RONDAS', type:'interval',
+      info:'200M RUN · 20 PULL-UPS · 20 T2B · 15 PUSH-UPS', note:'5 MIN = 25 MIN TOTAL (WOD 1)' },
+    cada2: { label:'CADA 2 MINUTOS', interval:120, rounds:5, sub:'CADA 2 MINUTOS · 5 RONDAS', type:'interval',
+      info:'400M RUN · MC BURPEES', note:'2 MIN = 10 MIN TOTAL (WOD 2)' },
+    amrap: { label:'AMRAP', duration:1200, sub:'TANTAS RONDAS COMO SEA POSIBLE', type:'countdown',
+      info:'CONFIGURA TU PROPIO AMRAP', note:'20:00 POR DEFECTO' },
+    emom: { label:'EMOM', interval:60, rounds:10, sub:'CADA MINUTO EN PUNTO', type:'interval',
+      info:'DEFINE TU MOVIMIENTO POR MINUTO', note:'10 RONDAS POR DEFECTO' }
   };
 
   var currentMode = 'cada5';
-  var timerState = {
-    running:false, timeLeft:0, round:1, phase:'work', // phase for tabata
-    handle:null
-  };
+  var timerState = { running:false, timeLeft:0, round:1, handle:null };
 
   var audioCtx = null;
   function beep(freq, duration){
@@ -737,91 +808,37 @@
     return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
   }
 
-  function renderConfig(){
-    var mode = MODES[currentMode];
-    var html = '';
-    if(mode.type === 'interval'){
-      html = '<div class="timer-config-row"><span>Intervalo</span><span>' + fmtTime(mode.interval) + '</span></div>' +
-             '<div class="timer-config-row"><span>Rondas</span><span>' + mode.rounds + '</span></div>';
-    } else if(mode.type === 'countdown'){
-      html = '<div class="timer-config-row"><span>Duración (min)</span><input type="number" min="1" id="amrap-min" value="' + Math.round(mode.duration/60) + '"></div>';
-    } else if(mode.type === 'countup'){
-      html = '<div class="timer-config-row"><span>Tope máximo (min)</span><input type="number" min="1" id="fortime-cap" value="' + Math.round(mode.cap/60) + '"></div>';
-    } else if(mode.type === 'tabata'){
-      html = '<div class="timer-config-row"><span>Trabajo / Descanso</span><span>' + mode.work + 's / ' + mode.rest + 's</span></div>' +
-             '<div class="timer-config-row"><span>Rondas</span><span>' + mode.rounds + '</span></div>';
-    }
-    timerConfig.innerHTML = html;
-
-    var amrapInput = document.getElementById('amrap-min');
-    if(amrapInput){
-      amrapInput.addEventListener('change', function(){
-        var v = parseInt(amrapInput.value, 10);
-        if(v > 0){ MODES.amrap.duration = v * 60; resetTimer(); }
-      });
-    }
-    var forTimeInput = document.getElementById('fortime-cap');
-    if(forTimeInput){
-      forTimeInput.addEventListener('change', function(){
-        var v = parseInt(forTimeInput.value, 10);
-        if(v > 0){ MODES.fortime.cap = v * 60; resetTimer(); }
-      });
-    }
-  }
-
   function initTimerForMode(){
     var mode = MODES[currentMode];
     timerSub.textContent = mode.sub;
     timerSub.classList.remove('finished');
+    timerInfoContent.textContent = mode.info;
+    timerConfigNote.textContent = mode.note;
+    timerStartBtn.textContent = 'INICIAR';
+    timerStartBtn.classList.remove('pause-state');
     timerState.round = 1;
-    timerState.phase = 'work';
     if(mode.type === 'interval'){
       timerState.timeLeft = mode.interval;
-      timerRoundLabel.textContent = 'Ronda 1 / ' + mode.rounds;
+      timerRoundLabel.textContent = 'RONDA 1 / ' + mode.rounds;
     } else if(mode.type === 'countdown'){
       timerState.timeLeft = mode.duration;
       timerRoundLabel.textContent = 'AMRAP';
-    } else if(mode.type === 'countup'){
-      timerState.timeLeft = 0;
-      timerRoundLabel.textContent = 'FOR TIME';
-    } else if(mode.type === 'tabata'){
-      timerState.timeLeft = mode.work;
-      timerRoundLabel.textContent = 'TRABAJO · Ronda 1 / ' + mode.rounds;
     }
     updateDisplay();
   }
 
   function updateDisplay(){
-    var mode = MODES[currentMode];
-    var displaySec = mode.type === 'countup' ? timerState.timeLeft : timerState.timeLeft;
-    timerDisplay.textContent = fmtTime(displaySec);
-
-    var isLastTen = mode.type !== 'countup' && timerState.timeLeft <= 10 && timerState.timeLeft > 0 && timerState.running;
+    timerDisplay.textContent = fmtTime(timerState.timeLeft);
+    var isLastTen = timerState.timeLeft <= 10 && timerState.timeLeft > 0 && timerState.running;
     if(isLastTen){
-      timerDisplayWrap.classList.add('danger');
       timerDisplay.classList.add('danger');
-      timerRoundLabel.classList.add('danger');
-      timerRoundLabel.textContent = 'ÚLTIMOS SEGUNDOS';
     } else {
-      timerDisplayWrap.classList.remove('danger');
       timerDisplay.classList.remove('danger');
-      timerRoundLabel.classList.remove('danger');
     }
   }
 
   function tick(){
     var mode = MODES[currentMode];
-
-    if(mode.type === 'countup'){
-      timerState.timeLeft += 1;
-      if(timerState.timeLeft >= mode.cap){
-        finishTimer();
-        return;
-      }
-      updateDisplay();
-      return;
-    }
-
     timerState.timeLeft -= 1;
 
     if(timerState.timeLeft <= 0){
@@ -833,75 +850,61 @@
         beep(1046, 0.35);
         timerState.round += 1;
         timerState.timeLeft = mode.interval;
-        timerRoundLabel.textContent = 'Ronda ' + timerState.round + ' / ' + mode.rounds;
-        timerRoundLabel.classList.remove('danger');
+        timerRoundLabel.textContent = 'RONDA ' + timerState.round + ' / ' + mode.rounds;
       } else if(mode.type === 'countdown'){
         finishTimer();
         return;
-      } else if(mode.type === 'tabata'){
-        if(timerState.phase === 'work'){
-          beep(1046, 0.3);
-          timerState.phase = 'rest';
-          timerState.timeLeft = mode.rest;
-          timerRoundLabel.textContent = 'DESCANSO · Ronda ' + timerState.round + ' / ' + mode.rounds;
-        } else {
-          if(timerState.round >= mode.rounds){
-            finishTimer();
-            return;
-          }
-          beep(1318, 0.3);
-          timerState.round += 1;
-          timerState.phase = 'work';
-          timerState.timeLeft = mode.work;
-          timerRoundLabel.textContent = 'TRABAJO · Ronda ' + timerState.round + ' / ' + mode.rounds;
-        }
-        timerRoundLabel.classList.remove('danger');
       }
     }
-
     updateDisplay();
   }
 
   function startTimer(){
-    if(timerState.running) return;
+    if(timerState.running){
+      pauseTimer();
+      return;
+    }
     timerState.running = true;
+    timerStartBtn.textContent = 'PAUSAR';
+    timerStartBtn.classList.add('pause-state');
     timerState.handle = setInterval(tick, 1000);
   }
   function pauseTimer(){
     timerState.running = false;
     clearInterval(timerState.handle);
+    timerStartBtn.textContent = 'INICIAR';
+    timerStartBtn.classList.remove('pause-state');
+    updateDisplay();
   }
   function resetTimer(){
     pauseTimer();
-    renderConfig();
     initTimerForMode();
   }
   function finishTimer(){
-    pauseTimer();
+    timerState.running = false;
+    clearInterval(timerState.handle);
     beep(660, 0.6);
     setTimeout(function(){ beep(880, 0.6); }, 350);
-    timerDisplayWrap.classList.remove('danger');
-    timerDisplay.classList.remove('danger');
-    timerRoundLabel.classList.remove('danger');
-    timerRoundLabel.textContent = MODES[currentMode].type === 'countup' ? 'FOR TIME' : '';
+    timerDisplay.classList.add('danger');
+    timerDisplay.textContent = 'TIEMPO';
     timerSub.textContent = '¡TIEMPO!';
     timerSub.classList.add('finished');
+    timerStartBtn.textContent = 'INICIAR';
+    timerStartBtn.classList.remove('pause-state');
   }
 
-  document.getElementById('timer-start').addEventListener('click', startTimer);
-  document.getElementById('timer-pause').addEventListener('click', pauseTimer);
+  timerStartBtn.addEventListener('click', startTimer);
   document.getElementById('timer-reset').addEventListener('click', resetTimer);
 
-  document.querySelectorAll('#timer-modes .mode-btn').forEach(function(btn){
+  document.querySelectorAll('#timer-modes .tab-btn').forEach(function(btn){
     btn.addEventListener('click', function(){
-      document.querySelectorAll('#timer-modes .mode-btn').forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('#timer-modes .tab-btn').forEach(function(b){ b.classList.remove('active'); });
       btn.classList.add('active');
       currentMode = btn.dataset.mode;
       resetTimer();
     });
   });
 
-  renderConfig();
   initTimerForMode();
 
   /* ---------------- ATLETAS ---------------- */
@@ -926,21 +929,12 @@
   function renderAthletes(){
     var grid = document.getElementById('athletes-grid');
     grid.innerHTML = '';
-
-    var coachCard = document.createElement('div');
-    coachCard.className = 'athlete-card coach';
-    coachCard.innerHTML =
-      '<div class="avatar">CL<span class="presence-dot active"></span></div>' +
-      '<div><div class="athlete-name">Claudia</div><div class="athlete-role">Coach</div></div>';
-    grid.appendChild(coachCard);
-
     ATHLETES.forEach(function(a){
       var card = document.createElement('div');
       card.className = 'athlete-card';
       card.innerHTML =
         '<div class="avatar">' + initials(a.name) + '<span class="presence-dot ' + (a.active ? 'active' : '') + '"></span></div>' +
-        '<div class="athlete-name">' + a.name + '</div>' +
-        '<div class="athlete-role">Atleta</div>';
+        '<div class="athlete-name">' + a.name + '</div>';
       grid.appendChild(card);
     });
 
@@ -953,11 +947,11 @@
   /* ---------------- STATS / BENCHMARKS ---------------- */
   var BENCHMARKS_KEY = 'ragnar_benchmarks';
   var DEFAULT_BENCHMARKS = [
-    { name:'Fran', value:'3:48', pr:true },
-    { name:'Grace', value:'2:11', pr:false },
-    { name:'Cindy', value:'24 rondas', pr:false },
-    { name:'DT', value:'6:02', pr:false },
-    { name:'Isabel', value:'4:44', pr:false }
+    { name:'Fran', desc:'21-15-9 THRUSTERS / PULL-UPS', value:'3:48', pr:true },
+    { name:'Grace', desc:'30 CLEAN & JERK FOR TIME', value:'2:11', pr:false },
+    { name:'Cindy', desc:'AMRAP 20 · PULL-UP/PUSH-UP/SQUAT', value:'24 RDS', pr:false },
+    { name:'DT', desc:'5 RONDAS · DEADLIFT/HANG CLEAN/PUSH JERK', value:'6:02', pr:false },
+    { name:'Isabel', desc:'30 SNATCH FOR TIME', value:'4:44', pr:false }
   ];
 
   function getBenchmarks(){
@@ -974,13 +968,18 @@
     var list = getBenchmarks();
     var container = document.getElementById('benchmarks-list');
     container.innerHTML = '';
-    list.forEach(function(b){
-      var card = document.createElement('div');
-      card.className = 'benchmark-card';
-      card.innerHTML =
-        '<div class="benchmark-name">' + b.name + (b.pr ? ' <span class="pr-badge">PR</span>' : '') + '</div>' +
-        '<div class="benchmark-value">' + b.value + '</div>';
-      container.appendChild(card);
+    list.forEach(function(b, idx){
+      var row = document.createElement('div');
+      row.className = 'benchmark-row';
+      var num = (idx + 1 < 10 ? '0' : '') + (idx + 1);
+      row.innerHTML =
+        '<div class="bm-num">' + num + '</div>' +
+        '<div class="bm-info">' +
+          '<div class="bm-name-row"><span class="bm-name">' + b.name.toUpperCase() + '</span>' + (b.pr ? '<span class="bm-pr">PR</span>' : '') + '</div>' +
+          '<div class="bm-desc">' + (b.desc || '') + '</div>' +
+        '</div>' +
+        '<div class="bm-value">' + b.value + '</div>';
+      container.appendChild(row);
     });
   }
   renderBenchmarks();
@@ -997,10 +996,14 @@
       existing.value = value.trim();
       existing.pr = isPr;
     } else {
-      list.push({ name: name.trim(), value: value.trim(), pr: isPr });
+      list.push({ name: name.trim(), desc:'', value: value.trim(), pr: isPr });
     }
     saveBenchmarks(list);
     renderBenchmarks();
+  });
+
+  document.getElementById('analyze-ai-btn').addEventListener('click', function(){
+    alert('Análisis con IA próximamente disponible.');
   });
 
   /* ---------------- SERVICE WORKER ---------------- */
